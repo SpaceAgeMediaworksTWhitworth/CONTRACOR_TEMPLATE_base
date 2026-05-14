@@ -25,24 +25,27 @@ function disableDarkMode() {
 }
 
 // Determines a user's dark mode preferences and applies theme
-function detectColorScheme() {
-	let theme = "light"; // Default to light theme
+// function detectColorScheme() {
+// 	let theme = "light"; // Default to light theme
+//
+// 	// 1. Check localStorage for a saved 'theme' preference
+// 	if (localStorage.getItem("theme")) {
+// 		theme = localStorage.getItem("theme");
+// 	}
+// 	// 2. If no saved preference, check browser's system preference
+// 	else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+// 		theme = "dark";
+// 	}
+//
+// 	// Apply the detected theme and set the initial aria-pressed state
+// 	theme === "dark" ? enableDarkMode() : disableDarkMode();
+// }
+//
+// // Run on page load to detect and apply the theme
+// detectColorScheme();
 
-	// 1. Check localStorage for a saved 'theme' preference
-	if (localStorage.getItem("theme")) {
-		theme = localStorage.getItem("theme");
-	}
-	// 2. If no saved preference, check browser's system preference
-	else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-		theme = "dark";
-	}
-
-	// Apply the detected theme and set the initial aria-pressed state
-	theme === "dark" ? enableDarkMode() : disableDarkMode();
-}
-
-// Run on page load to detect and apply the theme
-detectColorScheme();
+// Force light mode regardless of saved or system preferences.
+disableDarkMode();
 
 // Add event listener to the dark mode button toggle
 if (darkModeToggle) {
