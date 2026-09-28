@@ -1,0 +1,40 @@
+---
+permalink: "/privacy-policy/"
+eleventyComputed:
+  title: "Privacy Policy | {{ client.name }}"
+  description: "How {{ client.name }} collects, uses, and protects your information."
+---
+{% extends "layouts/base.html" %}
+{% block head %}<link rel="stylesheet" href="/assets/css/inner.css">{% endblock %}
+{% block body %}
+<section class="cs-main-content cs-legal">
+    <div class="cs-container">
+        <article class="cs-prose">
+            <h1>Privacy Policy</h1>
+            <p><em>Last updated: {{ legalUpdated or "September 28, 2026" }}</em></p>
+            <p>{{ client.legalName or client.name }} ("we", "us") respects your privacy. This policy explains what we collect on this website and how we use it.</p>
+            <h2>What we collect</h2>
+            <ul>
+                <li>Information you give us, like your name, phone number, email, address, and details about your project when you fill out a form or call us.</li>
+                <li>Basic website data, like pages visited, device type, and how you found us. We use tools such as Google Analytics and Google Tag Manager for this.</li>
+            </ul>
+            <h2>How we use it</h2>
+            <ul>
+                <li>To answer your request, schedule work, and send estimates and invoices.</li>
+                <li>To send appointment reminders, updates, and review requests by phone, email, or text (if you agreed to texts).</li>
+                <li>To improve our website and see which ads and pages work.</li>
+            </ul>
+            <h2>Text messages</h2>
+            <p>No mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Text messaging opt-in data and consent will not be shared with any third parties. See our <a href="/sms-terms/">SMS Terms</a>.</p>
+            <h2>Sharing</h2>
+            <p>We do not sell your information. We only share it with service providers that help us run the business (like our scheduling, phone, and email software), or when the law requires it.</p>
+            <h2>Cookies</h2>
+            <p>This site uses cookies for analytics and advertising. You can block cookies in your browser settings.</p>
+            <h2>Your choices</h2>
+            <p>You can ask us to update or delete your information any time. Reply STOP to any text to opt out of texts.</p>
+            <h2>Contact us</h2>
+            <p>{{ client.name }}<br>{% if not client.address.hideStreet %}{{ client.address.lineOne }}, {% endif %}{{ client.address.city }}, {{ client.address.state }} {{ client.address.zip }}<br><a href="tel:{{ client.phoneForTel }}">{{ client.phoneFormatted }}</a> · <a href="mailto:{{ client.email }}">{{ client.email }}</a></p>
+        </article>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{#- FAQ list. Set faqList + faqTitle before include. Uses <details> so it works with no JS. -#}
+{% if faqList and faqList.length %}
+<section id="faq" class="cs-faq">
+    <div class="cs-container">
+        <div class="cs-content">
+            <span class="cs-topper">FAQ</span>
+            <h2 class="cs-title">{{ faqTitle or "Common Questions" }}</h2>
+        </div>
+        <div class="cs-faq-group">
+            {% for f in faqList %}
+            <details class="cs-faq-item" {% if loop.first %}open{% endif %}>
+                <summary class="cs-question">{{ f.q }}</summary>
+                <div class="cs-answer">{{ f.a | md | safe }}</div>
+            </details>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

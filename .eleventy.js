@@ -21,6 +21,8 @@ const javascript = require("./src/config/processors/javascript");
 const filterPostDate = require("./src/config/filters/postDate");
 const filterIsoDate = require("./src/config/filters/isoDate");
 const filterTitleCase = require("./src/config/filters/titleCase");
+const localFilters = require("./src/config/filters/local");
+const schema = require("./src/config/schema");
 const isProduction = process.env.ELEVENTY_ENV === "PROD";
 
 module.exports = function (eleventyConfig) {
@@ -104,6 +106,24 @@ module.exports = function (eleventyConfig) {
 	 */
 	eleventyConfig.addFilter("isoDate", filterIsoDate);
 
+	/*
+	 * 📍 Local SEO filters (md, milesBetween, imageOr, offered, bySlugs, clip, time12, dayRange)
+	 * See src/config/filters/local.js
+	 */
+	for (const [name, fn] of Object.entries(localFilters)) {
+		eleventyConfig.addFilter(name, fn);
+	}
+
+	// ═════════════════════════════════════════════════════════════════════════
+	// COLLECTIONS
+	// Services and service areas are markdown files in src/content/services and
+	// src/content/areas. Sorted by their "order" field.
+	// ═════════════════════════════════════════════════════════════════════════
+
+	const byOrder = (a, b) => (a.data.order || 99) - (b.data.order || 99) || a.data.title?.localeCompare?.(b.data.title);
+	eleventyConfig.addCollection("services", (api) => api.getFilteredByGlob("./src/content/services/*.md").sort(byOrder));
+	eleventyConfig.addCollection("areas", (api) => api.getFilteredByGlob("./src/content/areas/*.md").sort(byOrder));
+
 	// ═════════════════════════════════════════════════════════════════════════
 	// SHORTCODES
 	// Generate dynamic content with JavaScript
@@ -117,6 +137,15 @@ module.exports = function (eleventyConfig) {
 	 * Updates automatically with each build
 	 */
 	eleventyConfig.addShortcode("year", () => `${new Date().getFullYear()}`);
+
+	/*
+	 * 🧩 Schema Shortcode
+	 * Outputs the page's JSON-LD @graph (business, website, page, breadcrumbs, service/town/post/FAQs)
+	 * Usage: {% schema %} (already in layouts/base.html)
+	 */
+	eleventyConfig.addNunjucksShortcode("schema", function () {
+		return schema(this.ctx);
+	});
 
 	// ═════════════════════════════════════════════════════════════════════════
 	// BUILD CONFIGURATION

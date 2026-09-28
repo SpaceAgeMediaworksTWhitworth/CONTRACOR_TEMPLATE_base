@@ -1,0 +1,21 @@
+---
+permalink: "/404.html"
+noindex: true
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  title: "Page Not Found | {{ client.name }}"
+  description: "That page couldn't be found."
+---
+{% extends "layouts/base.html" %}
+{% block head %}<link rel="stylesheet" href="/assets/css/inner.css">{% endblock %}
+{% block body %}
+<section class="cs-main-content cs-center cs-thanks">
+    <div class="cs-container">
+        <h1 class="cs-title">We Can't Find That Page</h1>
+        <p class="cs-text">It may have moved. Try one of these, or call <a href="tel:{{ client.phoneForTel }}">{{ client.phoneFormatted }}</a>.</p>
+        <ul class="cs-pill-list cs-center">
+            <li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li><a href="/service-areas/">Service Areas</a></li><li><a href="/contact/">Contact</a></li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

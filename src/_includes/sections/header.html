@@ -1,12 +1,18 @@
 <!-- ============================================ -->
 <!--                 Navigation                   -->
 <!-- ============================================ -->
+{%- set navServices = collections.services | offered(client.services) -%}
+{%- macro navLink(url, label, extraClass="") -%}
+<li class="cs-li {{ extraClass }}">
+    <a href="{{ url }}" class="cs-li-link {% if page.url == url %}cs-active{% endif %}" {% if page.url == url %}aria-current="page"{% endif %}>{{ label }}</a>
+</li>
+{%- endmacro -%}
 
 <header id="cs-navigation">
     <div class="cs-container">
         <!--Nav Logo-->
-        <a href="/" class="cs-logo" aria-label="Company Name Home page">
-            <img src="/assets/svgs/logo-black.svg" alt="" width="210" height="29" aria-hidden="true" decoding="async">
+        <a href="/" class="cs-logo" aria-label="{{ client.name }} home page">
+            <img src="{{ client.brand.logo }}" alt="{{ client.name }}" width="210" height="29" decoding="async">
         </a>
         <!--Navigation List-->
         <nav class="cs-nav" aria-label="main navigation">
@@ -18,58 +24,32 @@
                     <span class="cs-line cs-line3" aria-hidden="true"></span>
                 </span>
             </button>
-            <!-- We need a wrapper div so we can set a fixed height on the cs-ul in case the nav list gets too long from too many dropdowns being opened and needs to have an overflow scroll. This wrapper acts as the background so it can go the full height of the screen and not cut off any overflowing nav items while the cs-ul stops short of the bottom of the screen, which keeps all nav items in view no matter how mnay there are-->
             <div class="cs-ul-wrapper" id="cs-ul-wrapper">
                 <ul id="cs-expanded" class="cs-ul">
-                    <li class="cs-li">
-                        <a href="/" class="cs-li-link {% if page.url == "/" %} cs-active {% endif %}" {% if page.url == "/" %} aria-current="page" {% endif %}>
-                            Home
-                        </a>
-                    </li>
-                    <li class="cs-li">
-                        <a href="/about/" class="cs-li-link {% if page.url == "/about/" %} cs-active {% endif %}" {% if page.url == "/about/" %} aria-current="page" {% endif %}>
-                            About
-                        </a>
-                    </li>
-                    <!--Copy and paste this cs-dropdown list item and replace any .cs-li with this cs-dropdown group to make a new dropdown and it will work-->
-                    <!-- Note: When copying this dropdown, update the id attribute with an appropriate name (e.g., "services-dropdown-toggle", "products-dropdown-toggle") and ensure the aria-labelledby attribute on the ul matches the button's id -->
+                    {{ navLink("/", "Home") }}
                     <li class="cs-li cs-dropdown">
-                        <button class="cs-li-link cs-dropdown-toggle {% if page.url == "/project-one/" or page.url == "/project-two/" %} cs-active {% endif %}" aria-haspopup="menu" aria-expanded="false" id="projects-dropdown-toggle">
-                            Projects
+                        <button class="cs-li-link cs-dropdown-toggle {% if pageType == "service" or page.url == "/services/" %}cs-active{% endif %}" aria-haspopup="menu" aria-expanded="false" id="services-dropdown-toggle">
+                            Services
                             <img class="cs-drop-icon" src="/assets/svgs/dropdown.svg" alt="" width="15" height="15" decoding="async" aria-hidden="true">
                         </button>
-                        <ul class="cs-drop-ul" aria-labelledby="projects-dropdown-toggle">
-                            <li class="cs-drop-li">
-                                <a href="/project-one/" class="cs-li-link cs-drop-link">Project One</a>
-                            </li>
-                            <li class="cs-drop-li">
-                                <a href="/project-two/" class="cs-li-link cs-drop-link">Project Two</a>
-                            </li>
+                        <ul class="cs-drop-ul" aria-labelledby="services-dropdown-toggle">
+                            <li class="cs-drop-li"><a href="/services/" class="cs-li-link cs-drop-link">All Services</a></li>
+                            {% for service in navServices %}
+                            <li class="cs-drop-li"><a href="{{ service.url }}" class="cs-li-link cs-drop-link">{{ service.data.name }}</a></li>
+                            {% endfor %}
                         </ul>
                     </li>
-                    <li class="cs-li">
-                        <a href="/reviews/" class="cs-li-link {% if page.url == "/reviews/" %} cs-active {% endif %}" {% if page.url == "/reviews/" %} aria-current="page" {% endif %}>
-                            Reviews
-                        </a>
-                    </li>
-                    <li class="cs-li">
-                        <a href="/blog/" class="cs-li-link {% if page.url == "/blog/" %} cs-active {% endif %}" {% if page.url == "/blog/" %} aria-current="page" {% endif %}>
-                            Blog
-                        </a>
-                    </li>
-                    <li class="cs-li cs-hide-on-desktop">
-                        <a href="/contact/" class="cs-li-link {% if page.url == "/contact/" %} cs-active {% endif %}" {% if page.url == "/contact/" %} aria-current="page" {% endif %}>
-                            Contact
-                        </a>
-                    </li>
+                    {{ navLink("/service-areas/", "Service Areas") }}
+                    {{ navLink("/about/", "About") }}
+                    {{ navLink("/reviews/", "Reviews") }}
+                    {{ navLink("/blog/", "Blog") }}
+                    {{ navLink("/contact/", "Contact", "cs-hide-on-desktop") }}
                 </ul>
             </div>
         </nav>
-        <a href="/contact/" class="cs-button-solid cs-nav-button">Contact Us</a>
-        <!--Dark Mode toggle, uncomment button code if you want to enable a dark mode toggle-->
-        <!-- <button id="dark-mode-toggle" aria-label="dark mode toggle" aria-pressed="false">
-            <img class="cs-moon" aria-hidden="true" src="/assets/svgs/moon.svg" decoding="async" alt="" width="15" height="15">
-            <img class="cs-sun" aria-hidden="true" src="/assets/svgs/sun.svg" decoding="async" alt="" width="15" height="15">
-        </button> -->
+        <div class="cs-nav-actions">
+            <a href="tel:{{ client.phoneForTel }}" class="cs-nav-phone" data-loc="header">{{ client.phoneFormatted }}</a>
+            <a href="/contact/" class="cs-button-solid cs-nav-button">Free Estimate</a>
+        </div>
     </div>
 </header>

@@ -1,0 +1,27 @@
+{#- Interior page hero. Set before include: bannerTitle, bannerText, bannerImage, crumbs [{url,label}] -#}
+{% import "components/macros.html" as ui %}
+<section id="int-hero" class="cs-banner">
+    <div class="cs-container">
+        <nav class="cs-breadcrumbs" aria-label="breadcrumb">
+            <a href="/" class="cs-link">Home</a>
+            {% for c in crumbs %}
+            <span aria-hidden="true">/</span>
+            {% if loop.last %}<span class="cs-link cs-active" aria-current="page">{{ c.label }}</span>{% else %}<a href="{{ c.url }}" class="cs-link">{{ c.label }}</a>{% endif %}
+            {% endfor %}
+        </nav>
+        {% if bannerTopper %}<span class="cs-topper">{{ bannerTopper }}</span>{% endif %}
+        <h1 class="cs-title">{{ bannerTitle }}</h1>
+        {% if bannerText %}<div class="cs-text">{{ bannerText | md | safe }}</div>{% endif %}
+        <div class="cs-button-group">
+            <a href="/contact/" class="cs-button-solid">Get a Free Estimate</a>
+            <a href="tel:{{ client.phoneForTel }}" class="cs-button-outline cs-button-light" data-loc="banner">Call {{ client.phoneFormatted }}</a>
+        </div>
+        {% if client.reviews.count > 0 %}
+        <p class="cs-rating">{{ ui.stars(5) }} {{ client.reviews.rating }} from {{ client.reviews.count }} Google reviews</p>
+        {% endif %}
+    </div>
+    {{ ui.picture(bannerImage | imageOr(client.brand.ogImage), "", [
+        { media: "(max-width: 600px)", w: 640, h: 700 },
+        { media: "(min-width: 601px)", w: 1920, h: 700 }
+    ], true, "cs-background") }}
+</section>

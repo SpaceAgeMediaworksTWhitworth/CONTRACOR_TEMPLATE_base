@@ -1,0 +1,20 @@
+---
+permalink: "/thank-you/"
+noindex: true
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  title: "Thank You | {{ client.name }}"
+  description: "Thanks for reaching out to {{ client.name }}."
+---
+{% extends "layouts/base.html" %}
+{% block head %}<link rel="stylesheet" href="/assets/css/inner.css">{% endblock %}
+{% block body %}
+<section class="cs-main-content cs-center cs-thanks">
+    <div class="cs-container">
+        <h1 class="cs-title">Thanks! We Got Your Message.</h1>
+        <p class="cs-text">We'll get back to you soon, usually the same day. Need us sooner? Call <a href="tel:{{ client.phoneForTel }}" data-loc="thank-you">{{ client.phoneFormatted }}</a>.</p>
+        <a class="cs-button-solid" href="/">Back to Home</a>
+    </div>
+</section>
+<script>window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:"lead_thank_you"});</script>
+{% endblock %}

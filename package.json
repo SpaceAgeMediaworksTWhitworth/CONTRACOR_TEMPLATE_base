@@ -1,7 +1,7 @@
 {
-	"name": "intermediate-website-kit-less",
-	"version": "2.0.1",
-	"description": "The official CodeStitch Intermediate kit, featuring 11ty, Decap CMS and LESS - all set up for you! Perfect for websites of all sizes.",
+	"name": "space-age-local-site",
+	"version": "1.0.0",
+	"description": "Space Age local service business site template (CodeStitch Intermediate Kit + local SEO engine).",
 	"main": "index.js",
 	"scripts": {
 		"watch:cms": "npx decap-server",
@@ -13,7 +13,10 @@
 		"remove-dark-mode": "node scripts/remove-dark-mode.js",
 		"remove-decap": "node scripts/remove-decap.js",
 		"remove-demo": "node scripts/remove-demo.js",
-		"create-page": "node scripts/create-page.js"
+		"create-page": "node scripts/create-page.js",
+		"scaffold": "node scripts/scaffold.js",
+		"audit": "node scripts/seo-audit.js",
+		"check": "npm run build && npm run audit"
 	},
 	"repository": {
 		"type": "git",

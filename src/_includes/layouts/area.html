@@ -1,0 +1,95 @@
+{% extends "layouts/base.html" %}
+{#- Service area (town) page. Content comes from src/content/areas/<town>-<st>.md -#}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/css/inner.css">
+{% endblock %}
+
+{% block body %}
+    {% set noun = industry.titleNoun or industry.label %}
+    {% set miles = client.geo | milesBetween(geo) %}
+    {% set bannerTopper = "Serving " + town + ", " + state %}
+    {% set bannerTitle = noun + " in " + town + ", " + state %}
+    {% set bannerText = intro %}
+    {% set bannerImage = image %}
+    {% set crumbs = [{ url: "/service-areas/", label: "Service Areas" }, { url: page.url, label: town + ", " + state }] %}
+    {% include "components/banner.html" %}
+
+    <section class="cs-main-content">
+        <div class="cs-container">
+            <article class="cs-prose">
+                {{ content | safe }}
+
+                {% if homes or weather or permits %}
+                <h2>What We See in {{ town }}</h2>
+                <div class="cs-local-grid">
+                    {% if homes %}<div class="cs-local-card"><h3>The Homes</h3>{{ homes | md | safe }}</div>{% endif %}
+                    {% if weather %}<div class="cs-local-card"><h3>The Weather</h3>{{ weather | md | safe }}</div>{% endif %}
+                    {% if permits %}<div class="cs-local-card"><h3>Permits</h3>{{ permits | md | safe }}</div>{% endif %}
+                </div>
+                {% endif %}
+            </article>
+            <aside class="cs-sidebar">
+                <div class="cs-side-card cs-side-cta">
+                    <h2 class="cs-side-title">Need Help in {{ town }}?</h2>
+                    <p>Free estimates for {{ town }} homeowners. We'll come to you.</p>
+                    <a href="tel:{{ client.phoneForTel }}" class="cs-button-solid" data-loc="sidebar">Call {{ client.phoneFormatted }}</a>
+                    <a href="/contact/" class="cs-button-outline">Request an Estimate</a>
+                </div>
+                <div class="cs-side-card">
+                    <h2 class="cs-side-title">{{ town }} at a Glance</h2>
+                    <dl class="cs-facts">
+                        {% if county %}<dt>County</dt><dd>{{ county }}</dd>{% endif %}
+                        {% if zips and zips.length %}<dt>ZIP codes</dt><dd>{{ zips | join(", ") }}</dd>{% endif %}
+                        {% if miles > 0 %}<dt>From our shop</dt><dd>About {{ miles }} miles</dd>{% elif miles === 0 %}<dt>Our shop</dt><dd>Right here in {{ town }}</dd>{% endif %}
+                        {% if neighborhoods and neighborhoods.length %}<dt>Areas we cover</dt><dd>{{ neighborhoods | join(", ") }}{% if neighborhoods.length > 2 %} and nearby{% endif %}</dd>{% endif %}
+                    </dl>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    {% set cardServices = collections.services | offered(client.services) | bySlugs(featuredServices or []) %}
+    {% if not cardServices.length %}{% set cardServices = (collections.services | offered(client.services)).slice(0, 3) %}{% endif %}
+    {% set cardsTopper = "Popular in " + town %}
+    {% set cardsTitle = "What " + town + " Homeowners Call Us For" %}
+    {% set cardsTown = town %}
+    {% include "components/service-cards.html" %}
+
+    <section class="cs-all-services">
+        <div class="cs-container">
+            <h2 class="cs-title">Everything We Do in {{ town }}</h2>
+            <ul class="cs-pill-list">
+                {% for s in collections.services | offered(client.services) %}
+                <li><a href="{{ s.url }}">{{ s.data.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    {% include "components/reviews.html" %}
+
+    {% set faqList = faqs %}
+    {% set faqTitle = town + " Questions" %}
+    {% include "components/faq.html" %}
+
+    <section class="cs-nearby">
+        <div class="cs-container">
+            <div class="cs-nearby-list">
+                <h2 class="cs-title">Nearby Towns We Serve</h2>
+                <ul class="cs-pill-list">
+                    {% for n in collections.areas | nearest(geo, 6, page.url) %}
+                    <li><a href="{{ n.area.url }}">{{ n.area.data.town }}, {{ n.area.data.state }}</a></li>
+                    {% endfor %}
+                </ul>
+                <a class="cs-more" href="/service-areas/">See all service areas <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="cs-map">
+                <iframe title="Map of {{ town }}, {{ state }}" src="https://maps.google.com/maps?q={{ (town + ', ' + state) | urlencode }}&z=12&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+
+    {% set ctaTitle = "Get a Free Estimate in " + town %}
+    {% include "sections/cta.html" %}
+{% endblock %}

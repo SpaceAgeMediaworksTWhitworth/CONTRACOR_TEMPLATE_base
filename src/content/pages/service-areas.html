@@ -1,0 +1,34 @@
+---
+permalink: "/service-areas/"
+eleventyComputed:
+  title: "Service Areas | {{ client.name }}"
+  description: "{{ client.name }} serves {{ collections.areas.length }} towns in the {{ client.region }}, including {% for a in collections.areas.slice(0, 4) %}{{ a.data.town }}{% if not loop.last %}, {% endif %}{% endfor %}. Free estimates."
+---
+{% extends "layouts/base.html" %}
+{% block head %}<link rel="stylesheet" href="/assets/css/inner.css">{% endblock %}
+{% block body %}
+    {% set bannerTitle = "Where We Work" %}
+    {% set bannerText = "We're based in " + client.address.city + ", " + client.address.state + " and work all over the " + client.region + ". Find your town below." %}
+    {% set crumbs = [{ url: "/service-areas/", label: "Service Areas" }] %}
+    {% include "components/banner.html" %}
+
+    <section class="cs-area-hub">
+        <div class="cs-container">
+            <ul class="cs-area-cards">
+                {% for area in collections.areas %}
+                {% set miles = client.geo | milesBetween(area.data.geo) %}
+                <li class="cs-area-card">
+                    <a href="{{ area.url }}">
+                        <h2 class="cs-h3">{{ area.data.town }}, {{ area.data.state }}</h2>
+                        <p>{{ area.data.county }}{% if miles > 0 %} · about {{ miles }} miles away{% endif %}</p>
+                        <span class="cs-more">{{ industry.label }} in {{ area.data.town }} <span aria-hidden="true">→</span></span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="cs-text cs-center">Don't see your town? We likely still cover it. Call <a href="tel:{{ client.phoneForTel }}">{{ client.phoneFormatted }}</a>.</p>
+        </div>
+    </section>
+
+    {% include "sections/cta.html" %}
+{% endblock %}

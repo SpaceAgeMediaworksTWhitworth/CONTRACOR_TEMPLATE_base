@@ -1,32 +1,21 @@
 <!-- ============================================ -->
 <!--                     CTA                      -->
 <!-- ============================================ -->
-
+{% import "components/macros.html" as ui %}
 <section id="cta-51">
     <div class="cs-container">
         <div class="cs-content">
-            <span class="cs-topper">Contact Us</span>
-            <h2 class="cs-title">Get It Done With Us Today</h2>
-            <p class="cs-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis at sit pellentesque molestie.  Diam, adipiscing ultrices eu turpis gravida.
-            </p>
-            <a href="/contact/" class="cs-button-solid">Get A Free Quote</a>
+            <span class="cs-topper">Free Estimates</span>
+            <h2 class="cs-title">{{ ctaTitle or "Ready to Get Started?" }}</h2>
+            <p class="cs-text">{{ ctaText or ("Call or send us a message. We'll come look, tell you what we see, and give you a clear price. No pressure.") }}</p>
+            <div class="cs-button-group">
+                <a href="/contact/" class="cs-button-solid">Get a Free Estimate</a>
+                <a href="tel:{{ client.phoneForTel }}" class="cs-button-outline cs-button-light" data-loc="cta">Call {{ client.phoneFormatted }}</a>
+            </div>
         </div>
     </div>
-    <!-- Background Image-->
-    <picture class="cs-picture">
-        <!--Mobile Image-->
-        <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 812 }) | avif %}" type="image/avif">
-        <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 812 }) | webp %}" type="image/webp">
-        <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 812 }) | jpeg %}" type="image/jpeg">
-        <!--Tablet Image-->
-        <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 750 }) | avif %}" type="image/avif">
-        <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 750 }) | webp %}" type="image/webp">
-        <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 750 }) | jpeg %}" type="image/jpeg">
-        <!--Desktop Image-->
-        <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 555 }) | avif %}" type="image/avif">
-        <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 555 }) | webp %}" type="image/webp">
-        <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 555 }) | jpeg %}" type="image/jpeg">
-        <img src="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 555 }) | jpeg %}" alt="cabinets" width="1920" height="426" loading="lazy" decoding="async">
-    </picture>
+    {{ ui.picture(ctaImage | imageOr(client.brand.ogImage), "", [
+        { media: "(max-width: 600px)", w: 640, h: 812 },
+        { media: "(min-width: 601px)", w: 1920, h: 555 }
+    ], false, "cs-picture") }}
 </section>

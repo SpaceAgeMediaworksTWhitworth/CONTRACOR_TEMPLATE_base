@@ -1,0 +1,19 @@
+{#- "Why pick us" points from the industry pack -#}
+{% if industry.trustPoints and industry.trustPoints.length %}
+<section class="cs-trust">
+    <div class="cs-container">
+        <div class="cs-content">
+            <span class="cs-topper">Why {{ client.name }}</span>
+            <h2 class="cs-title">{{ trustTitle or "Why Homeowners Pick Us" }}</h2>
+        </div>
+        <ul class="cs-trust-group">
+            {% for t in industry.trustPoints %}
+            <li class="cs-trust-item">
+                <h3 class="cs-h3">{{ t.title }}</h3>
+                <p>{{ t.text }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}

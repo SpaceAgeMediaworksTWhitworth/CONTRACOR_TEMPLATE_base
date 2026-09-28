@@ -1,0 +1,20 @@
+{#- Grid of service cards. Set cardServices (collection items) + cardsTitle, cardsTopper, cardsTown (optional) -#}
+<section class="cs-service-cards">
+    <div class="cs-container">
+        <div class="cs-content">
+            <span class="cs-topper">{{ cardsTopper or "What We Do" }}</span>
+            <h2 class="cs-title">{{ cardsTitle or "Our Services" }}</h2>
+        </div>
+        <ul class="cs-card-group">
+            {% for s in cardServices %}
+            <li class="cs-item">
+                <a href="{{ s.url }}" class="cs-link">
+                    <h3 class="cs-h3">{{ s.data.name }}{% if cardsTown %} in {{ cardsTown }}{% endif %}</h3>
+                    <p class="cs-item-text">{{ s.data.summary }}</p>
+                    <span class="cs-more">Learn more <span aria-hidden="true">→</span></span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>

@@ -1,0 +1,24 @@
+---
+permalink: "/services/"
+eleventyComputed:
+  title: "{{ industry.label }} Services | {{ client.name }}"
+  description: "Every {{ industry.label | lower }} service {{ client.name }} offers in {{ client.address.city }} and the {{ client.region }}. Free estimates. Call {{ client.phoneFormatted }}."
+---
+{% extends "layouts/base.html" %}
+{% block head %}<link rel="stylesheet" href="/assets/css/inner.css">{% endblock %}
+{% block body %}
+    {% set bannerTitle = industry.label + " Services" %}
+    {% set bannerText = "Here's everything we do for homeowners in " + client.address.city + " and the " + client.region + ". Not sure what you need? Call us and we'll help you figure it out." %}
+    {% set crumbs = [{ url: "/services/", label: "Services" }] %}
+    {% include "components/banner.html" %}
+
+    {% set cardServices = collections.services | offered(client.services) %}
+    {% set cardsTopper = "What We Do" %}
+    {% set cardsTitle = "Pick a Service to Learn More" %}
+    {% set cardsTown = "" %}
+    {% include "components/service-cards.html" %}
+
+    {% include "components/trust.html" %}
+    {% include "components/area-list.html" %}
+    {% include "sections/cta.html" %}
+{% endblock %}

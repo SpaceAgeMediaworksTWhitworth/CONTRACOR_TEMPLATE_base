@@ -1,0 +1,41 @@
+{#- Lead form. GHL embed if client.forms.ghlFormId is set, otherwise a Netlify form. -#}
+<div class="cs-lead-form">
+    {% if client.forms.ghlFormId %}
+    <iframe
+        src="{{ client.forms.ghlHost }}/widget/form/{{ client.forms.ghlFormId }}"
+        style="width:100%;height:100%;border:none;border-radius:4px;min-height:640px"
+        id="inline-{{ client.forms.ghlFormId }}"
+        data-layout="{'id':'INLINE'}"
+        data-trigger-type="alwaysShow"
+        data-activation-type="alwaysActivated"
+        data-deactivation-type="neverDeactivate"
+        data-form-name="Website Form"
+        data-layout-iframe-id="inline-{{ client.forms.ghlFormId }}"
+        data-form-id="{{ client.forms.ghlFormId }}"
+        title="Request a free estimate"
+        loading="lazy">
+    </iframe>
+    <script src="{{ client.forms.ghlHost }}/js/form_embed.js" defer></script>
+    {% else %}
+    <form class="cs-form" name="Estimate Request" method="post" action="{{ client.forms.thankYouPath }}" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="Estimate Request">
+        <input type="hidden" name="page" value="{{ page.url }}">
+        <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
+        <label class="cs-label">Name<input class="cs-input" required type="text" name="name" autocomplete="name"></label>
+        <label class="cs-label">Phone<input class="cs-input" required type="tel" name="phone" autocomplete="tel"></label>
+        <label class="cs-label">Email<input class="cs-input" type="email" name="email" autocomplete="email"></label>
+        <label class="cs-label">Address or town<input class="cs-input" type="text" name="address" autocomplete="street-address"></label>
+        <label class="cs-label">What do you need help with?
+            <select class="cs-input" name="service">
+                {% for s in collections.services | offered(client.services) %}<option {% if name == s.data.name %}selected{% endif %}>{{ s.data.name }}</option>{% endfor %}
+                <option>Something else</option>
+            </select>
+        </label>
+        <label class="cs-label">Details<textarea class="cs-input cs-textarea" name="message" rows="4"></textarea></label>
+        {% if client.sms.enabled %}
+        <label class="cs-consent"><input type="checkbox" name="sms_consent" value="yes"> I agree to get text messages from {{ client.name }} about my request. Message and data rates may apply. Reply STOP to opt out. See our <a href="/sms-terms/">SMS Terms</a> and <a href="/privacy-policy/">Privacy Policy</a>.</label>
+        {% endif %}
+        <button class="cs-button-solid cs-submit" type="submit">Get My Free Estimate</button>
+    </form>
+    {% endif %}
+</div>

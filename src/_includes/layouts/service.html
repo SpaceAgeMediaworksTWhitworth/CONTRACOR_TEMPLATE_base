@@ -1,0 +1,90 @@
+{% extends "layouts/base.html" %}
+{#- Service page. Content comes from src/content/services/<slug>.md -#}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/css/inner.css">
+{% endblock %}
+
+{% block body %}
+    {% set bannerTopper = client.name %}
+    {% set bannerTitle = name + " in " + client.address.city + ", " + client.address.state %}
+    {% set bannerText = summary %}
+    {% set bannerImage = image %}
+    {% set crumbs = [{ url: "/services/", label: "Services" }, { url: page.url, label: name }] %}
+    {% include "components/banner.html" %}
+
+    <!-- Main content + sidebar -->
+    <section class="cs-main-content">
+        <div class="cs-container">
+            <article class="cs-prose">
+                {{ content | safe }}
+
+                {% if signs and signs.length %}
+                <h2>Signs You Need {{ name }}</h2>
+                <ul class="cs-checklist">
+                    {% for s in signs %}<li>{{ s | mdInline | safe }}</li>{% endfor %}
+                </ul>
+                {% endif %}
+            </article>
+            <aside class="cs-sidebar">
+                <div class="cs-side-card cs-side-cta">
+                    <h2 class="cs-side-title">Get a Free {{ name }} Estimate</h2>
+                    <p>Tell us what's going on. We'll come take a look and give you a clear, written price.</p>
+                    <a href="tel:{{ client.phoneForTel }}" class="cs-button-solid" data-loc="sidebar">Call {{ client.phoneFormatted }}</a>
+                    <a href="/contact/" class="cs-button-outline">Request an Estimate</a>
+                    {% if client.emergencyService %}<p class="cs-small">24/7 emergency service available.</p>{% endif %}
+                </div>
+                <div class="cs-side-card">
+                    <h2 class="cs-side-title">Our Services</h2>
+                    <ul class="cs-side-links">
+                        {% for s in collections.services | offered(client.services) %}
+                        <li><a href="{{ s.url }}" {% if s.url == page.url %}aria-current="page"{% endif %}>{{ s.data.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    {% if process and process.length %}
+    <section class="cs-steps">
+        <div class="cs-container">
+            <div class="cs-content">
+                <span class="cs-topper">How It Works</span>
+                <h2 class="cs-title">Our {{ name }} Process</h2>
+            </div>
+            <ol class="cs-step-group">
+                {% for step in process %}
+                <li class="cs-step">
+                    <span class="cs-step-num">{{ loop.index }}</span>
+                    <h3 class="cs-h3">{{ step.title }}</h3>
+                    <p>{{ step.text }}</p>
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+    {% endif %}
+
+    {% include "components/trust.html" %}
+    {% include "components/reviews.html" %}
+
+    {% set areaTitle = name + " Near You" %}
+    {% set areaText = "We do " + (name | lower) + " work in these towns and the areas around them." %}
+    {% include "components/area-list.html" %}
+
+    {% set faqList = faqs %}
+    {% set faqTitle = name + " Questions" %}
+    {% include "components/faq.html" %}
+
+    {% if related and related.length %}
+        {% set cardServices = collections.services | bySlugs(related) %}
+        {% set cardsTopper = "Related" %}
+        {% set cardsTitle = "Other Services You May Need" %}
+        {% set cardsTown = "" %}
+        {% include "components/service-cards.html" %}
+    {% endif %}
+
+    {% set ctaTitle = "Get Your Free " + name + " Estimate" %}
+    {% include "sections/cta.html" %}
+{% endblock %}

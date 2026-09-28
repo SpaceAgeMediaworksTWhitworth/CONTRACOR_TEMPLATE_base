@@ -20,17 +20,76 @@ collections:
       create: true
       slug: "{{slug}}"
       fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - {
-                label: "URL Slug",
-                name: "url",
-                widget: "string",
-                hint: 'Specify where the page will be written to. If you use "Blog Post", the post will be accessible from "blog/blog-post"',
-            }
-          - { label: "Description", name: "description", widget: "string" }
-          - { label: "Author", name: "author", widget: "string" }
-          - { label: "Date", name: "date", widget: "datetime" }
-          - { label: "Tags", name: "tags", widget: "list", default: ["post"] }
+          - { label: "Title", name: "title", widget: "string", hint: "Under 60 characters. Put the main search phrase near the start." }
+          - { label: "URL Slug", name: "url", widget: "string", hint: 'Short, lowercase, dashes. "roof-repair-cost" becomes /blog/roof-repair-cost/' }
+          - { label: "Description", name: "description", widget: "string", hint: "140-155 characters. Shows in Google results." }
+          - { label: "Author", name: "author", widget: "string", required: false }
+          - { label: "Publish Date", name: "date", widget: "datetime", hint: "Future dates stay hidden until that day's rebuild." }
+          - { label: "Last Updated", name: "updated", widget: "datetime", required: false }
+          - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+          - { label: "Related Services", name: "services", widget: "list", required: false, hint: "Service file names, e.g. roof-repair" }
           - { label: "Featured Image", name: "image", widget: "image" }
-          - { label: "Image Caption", name: "imageAlt", widget: "string" }
+          - { label: "Image Description (alt text)", name: "imageAlt", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+    - name: "services"
+      label: "Services"
+      folder: "src/content/services"
+      create: true
+      slug: "{{slug}}"
+      identifier_field: name
+      fields:
+          - { label: "Service Name", name: "name", widget: "string" }
+          - { label: "Order", name: "order", widget: "number", default: 99 }
+          - { label: "Show on Home Page", name: "featured", widget: "boolean", default: false }
+          - { label: "Short Summary (cards)", name: "summary", widget: "text" }
+          - { label: "Meta Description", name: "description", widget: "string" }
+          - { label: "Custom Page Title (optional)", name: "metaTitle", widget: "string", required: false }
+          - { label: "Schema Service Type", name: "schemaServiceType", widget: "string", required: false }
+          - { label: "Image", name: "image", widget: "image", required: false }
+          - { label: "Signs You Need This", name: "signs", widget: "list", required: false }
+          - label: "Process Steps"
+            name: "process"
+            widget: "list"
+            required: false
+            fields: [{ label: "Title", name: "title", widget: "string" }, { label: "Text", name: "text", widget: "text" }]
+          - label: "FAQs"
+            name: "faqs"
+            widget: "list"
+            required: false
+            fields: [{ label: "Question", name: "q", widget: "string" }, { label: "Answer", name: "a", widget: "text" }]
+          - { label: "Related Services", name: "related", widget: "list", required: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+    - name: "areas"
+      label: "Service Areas"
+      folder: "src/content/areas"
+      create: true
+      slug: "{{slug}}"
+      identifier_field: town
+      fields:
+          - { label: "Town", name: "town", widget: "string" }
+          - { label: "State", name: "state", widget: "string", default: "MO" }
+          - { label: "County", name: "county", widget: "string" }
+          - { label: "Order", name: "order", widget: "number", default: 99 }
+          - { label: "ZIP Codes", name: "zips", widget: "list", required: false }
+          - label: "Map Point"
+            name: "geo"
+            widget: "object"
+            fields: [{ label: "Latitude", name: "lat", widget: "number", value_type: "float" }, { label: "Longitude", name: "lng", widget: "number", value_type: "float" }]
+          - { label: "Wikipedia URL", name: "wikipedia", widget: "string", required: false }
+          - { label: "Meta Description", name: "description", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text" }
+          - { label: "Neighborhoods", name: "neighborhoods", widget: "list", required: false }
+          - { label: "Landmarks", name: "landmarks", widget: "list", required: false }
+          - { label: "The Homes", name: "homes", widget: "text", required: false }
+          - { label: "The Weather", name: "weather", widget: "text", required: false }
+          - { label: "Permits", name: "permits", widget: "text", required: false }
+          - { label: "Featured Services", name: "featuredServices", widget: "list", required: false }
+          - label: "FAQs"
+            name: "faqs"
+            widget: "list"
+            required: false
+            fields: [{ label: "Question", name: "q", widget: "string" }, { label: "Answer", name: "a", widget: "text" }]
+          - { label: "Facts Checked", name: "verified", widget: "boolean", default: false }
           - { label: "Body", name: "body", widget: "markdown" }

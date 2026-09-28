@@ -1517,3 +1517,150 @@
 		}
 	}
 }
+
+/*-- -------------------------- -->
+<---   Local SEO Engine: Global  -->
+<--- -------------------------- -*/
+@media only screen and (min-width: 0px) {
+	/* Always light. Without this, phones in dark mode show a dark canvas behind sections. */
+	:root {
+		color-scheme: light;
+	}
+	html,
+	body {
+		background-color: #fff;
+	}
+	/* Dark fallback behind white text on photo sections (slow images + contrast checks) */
+	#cta-51,
+	#int-hero,
+	#hero-143 {
+		background-color: var(--dark);
+		.cs-topper {
+			color: var(--primaryLight);
+		}
+	}
+	.cs-button-group {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+	.cs-button-light {
+		color: #fff;
+		border-color: #fff;
+	}
+	.cs-hero-proof {
+		list-style: none;
+		margin: 1.5rem auto 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem 1.5rem;
+		color: #fff;
+		font-size: 0.9375rem;
+		position: relative;
+	}
+	.cs-stars {
+		color: #fbbf24;
+		letter-spacing: 0.1em;
+	}
+	.cs-offer-bar {
+		background: var(--secondary);
+		color: #fff;
+		text-align: center;
+		padding: 0.5rem 1rem;
+		font-size: 0.9375rem;
+		a {
+			color: #fff;
+			font-weight: 700;
+			margin-left: 0.5rem;
+		}
+	}
+	#cs-navigation .cs-nav-actions {
+		display: none;
+	}
+	/* Sticky call bar on phones */
+	.cs-mobile-bar {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 9999;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+		a {
+			padding: 0.95rem 0.5rem;
+			text-align: center;
+			font-weight: 700;
+			font-size: 1rem;
+			text-decoration: none;
+			color: #fff;
+		}
+		.cs-mobile-call {
+			background: var(--primary);
+		}
+		.cs-mobile-quote {
+			background: var(--secondary);
+		}
+	}
+	body {
+		padding-bottom: 3.25rem;
+	}
+	#cs-footer-275 {
+		.cs-license {
+			font-size: 0.875rem;
+			opacity: 0.8;
+		}
+		.cs-hours span {
+			display: block;
+			color: var(--bodyTextColorWhite);
+			opacity: 0.8;
+			font-size: 0.875rem;
+			line-height: 1.6em;
+		}
+		.cs-more {
+			font-weight: 700;
+		}
+		.cs-bottom {
+			max-width: (1280/16rem);
+			margin: 2.5rem auto 0;
+			padding-top: 1.5rem;
+			border-top: 1px solid rgba(255, 255, 255, 0.15);
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1.5rem;
+			font-size: 0.875rem;
+			color: var(--bodyTextColorWhite);
+			opacity: 0.8;
+			a {
+				color: inherit;
+			}
+		}
+	}
+}
+@media only screen and (min-width: 64rem) {
+	.cs-mobile-bar {
+		display: none;
+	}
+	body {
+		padding-bottom: 0;
+	}
+	#cs-navigation {
+		.cs-nav-button {
+			display: inline-flex;
+		}
+		.cs-nav-actions {
+			display: flex !important;
+			align-items: center;
+			gap: 1rem;
+		}
+		.cs-nav-phone {
+			font-weight: 700;
+			color: var(--headerColor);
+			text-decoration: none;
+			white-space: nowrap;
+		}
+	}
+}

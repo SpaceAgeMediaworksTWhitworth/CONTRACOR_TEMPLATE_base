@@ -1,0 +1,59 @@
+{
+  "summary": {
+    "date": "2026-09-28T19:20:01.376Z",
+    "site": "Ridgeline Roofing & Exteriors",
+    "domain": "https://www.example.com",
+    "pages": 41,
+    "indexable": 39,
+    "byType": {
+      "page": 11,
+      "area": 20,
+      "service": 10
+    },
+    "errors": 0,
+    "warnings": 3,
+    "info": 5
+  },
+  "issues": [
+    {
+      "level": "warn",
+      "url": "/404.html",
+      "msg": "Description is short (28 chars)"
+    },
+    {
+      "level": "warn",
+      "url": "/",
+      "msg": "Title is 66 chars (aim for 65 or less): \"Roofing Contractor in O'Fallon, MO | Ridgeline Roofing & Exteriors\""
+    },
+    {
+      "level": "warn",
+      "url": "/thank-you/",
+      "msg": "Description is short (57 chars)"
+    },
+    {
+      "level": "info",
+      "url": "(site)",
+      "msg": "client.indexable is false: every page is noindex. Flip it at launch."
+    },
+    {
+      "level": "info",
+      "url": "(site)",
+      "msg": "No GTM or GA4 ID in client.js"
+    },
+    {
+      "level": "info",
+      "url": "(site)",
+      "msg": "No Search Console verification tag (fine if verified by DNS)"
+    },
+    {
+      "level": "info",
+      "url": "(site)",
+      "msg": "No review count in client.js. Add real Google numbers for trust + schema."
+    },
+    {
+      "level": "info",
+      "url": "(site)",
+      "msg": "No Google Business Profile URL. Add it (it's linked in schema sameAs)."
+    }
+  ]
+}

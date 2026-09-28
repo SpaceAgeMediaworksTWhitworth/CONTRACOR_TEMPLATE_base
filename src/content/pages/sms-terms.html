@@ -1,0 +1,32 @@
+---
+permalink: "/sms-terms/"
+eleventyComputed:
+  title: "SMS Terms | {{ client.name }}"
+  description: "SMS terms and conditions for text messages from {{ client.name }}."
+---
+{% extends "layouts/base.html" %}
+{% block head %}<link rel="stylesheet" href="/assets/css/inner.css">{% endblock %}
+{% block body %}
+<section class="cs-main-content cs-legal">
+    <div class="cs-container">
+        <article class="cs-prose">
+            <h1>SMS Terms &amp; Conditions</h1>
+            <p><em>Last updated: {{ legalUpdated or "September 28, 2026" }}</em></p>
+            <h2>Program description</h2>
+            <p>{{ client.name }} will send text messages including, but not limited to, appointment reminders, business communications, special offers, limited-time discounts, and review requests.</p>
+            <h2>Frequency</h2>
+            <p>You will periodically receive messages from {{ client.name }} when using our website, software, or when you call and we are unable to answer. You may also receive promotional offers or other business communications from {{ client.name }}. Message frequency varies.</p>
+            <h2>Opt-out</h2>
+            <p>You can cancel the SMS service at any time. Just reply "STOP". After you send "STOP" to us, you will be unsubscribed and will no longer receive SMS messages from us. If you want to join again, just sign up as you did the first time and we will start sending SMS messages to you again.</p>
+            <h2>Help</h2>
+            <p>If you are having trouble with the messaging program, reply with the keyword HELP, or get help directly at <a href="tel:{{ client.phoneForTel }}">{{ client.phoneFormatted }}</a>.</p>
+            <h2>Interruption</h2>
+            <p>Carriers are not liable for delayed or undelivered messages.</p>
+            <h2>Cost</h2>
+            <p>Message and data rates may apply for any messages sent to you from us and to us from you. If you have questions about your text or data plan, contact your wireless provider.</p>
+            <h2>Privacy</h2>
+            <p>We do not sell or share your mobile number or SMS consent with third parties for marketing. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+        </article>
+    </div>
+</section>
+{% endblock %}

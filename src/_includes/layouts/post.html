@@ -2,10 +2,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="/assets/css/blog.css">
-
-    <!-- To ensure proper validation, prevent errors, and encourage developers to check, schema's are an opt-in feature. They're very bespoke and requires some customising  -->
-    <!-- Uncomment the code below to enable Structured Data, and test it when you deploy to Netlify - https://developers.google.com/search/docs/appearance/structured-data -->
-    <!-- {% include "components/post-schema.html" %} -->
+    <link rel="stylesheet" href="/assets/css/inner.css">
 {% endblock %}
 
 {% block body %}
@@ -53,7 +50,7 @@
                     <source media="(min-width: 1024px)" srcset="{% getUrl image | resize({ width: 1600, height: 800 }) | avif %}" type="image/avif">
                     <source media="(min-width: 1024px)" srcset="{% getUrl image | resize({ width: 1600, height: 800 }) | webp %}" type="image/webp">
                     <source media="(min-width: 1024px)" srcset="{% getUrl image | resize({ width: 1600, height: 800 }) | jpeg %}" type="image/jpeg">
-                    <img src="{% getUrl image | resize({ width: 1600, height: 800 }) | jpeg %}" alt="{{ alt }}" width="800" height="400" loading="lazy" decoding="async" aria-hidden="true">
+                    <img src="{% getUrl image | resize({ width: 1600, height: 800 }) | jpeg %}" alt="{{ imageAlt or alt }}" width="800" height="400" loading="lazy" decoding="async" aria-hidden="true">
                 </picture>
                 <div class="cs-article-group">
                     <h1 class="cs-article-title">{{ title }}</h1>
@@ -61,7 +58,7 @@
                         <picture class="cs-author-img">
                             <img src="/assets/svgs/profile.svg" alt="Profile icon" width="32" height="32" decoding="async" loading="lazy" aria-hidden="true"/>
                         </picture>
-                        <span class="cs-author-name">{{ author }}</span>
+                        <span class="cs-author-name">{{ author or client.ownerName or client.name }}</span>
                         <span aria-hidden="true" class="cs-dot"></span>
                         <span class="cs-date">{{ date | postDate }}</span>
                     </div>
@@ -74,4 +71,14 @@
 
         {% include 'components/featured-posts.html' %}
     </div>
+
+    {% if services and services.length %}
+        {% set cardServices = collections.services | bySlugs(services) %}
+        {% set cardsTopper = "Need a Hand?" %}
+        {% set cardsTitle = "How " + client.name + " Can Help" %}
+        {% set cardsTown = "" %}
+        {% include "components/service-cards.html" %}
+    {% endif %}
+
+    {% include "sections/cta.html" %}
 {% endblock %}

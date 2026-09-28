@@ -1,0 +1,23 @@
+{#- Real reviews only (client.reviews.featured). Hidden if there are none. -#}
+{% import "components/macros.html" as ui %}
+{% if client.reviews.featured.length %}
+<section class="cs-reviews">
+    <div class="cs-container">
+        <div class="cs-content">
+            <span class="cs-topper">Reviews</span>
+            <h2 class="cs-title">What Our Customers Say</h2>
+            {% if client.reviews.count > 0 %}<p class="cs-text">{{ client.reviews.rating }} stars from {{ client.reviews.count }} Google reviews.</p>{% endif %}
+        </div>
+        <ul class="cs-review-group">
+            {% for r in client.reviews.featured.slice(0, reviewLimit or 3) %}
+            <li class="cs-review">
+                {{ ui.stars(r.stars or 5) }}
+                <blockquote class="cs-review-text">{{ r.text }}</blockquote>
+                <span class="cs-review-name">{{ r.name }}{% if r.town %}, {{ r.town }}{% endif %}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if client.reviews.googleReviewsUrl %}<a class="cs-button-outline" href="{{ client.reviews.googleReviewsUrl }}" target="_blank" rel="noopener">Read all our Google reviews</a>{% endif %}
+    </div>
+</section>
+{% endif %}

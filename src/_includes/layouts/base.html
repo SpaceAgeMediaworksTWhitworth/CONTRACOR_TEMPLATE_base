@@ -1,50 +1,84 @@
-<!-- A fully fleshed-out <head>, dynamically changing based on client.json and the page front matter -->
-
+<!-- A fully fleshed-out <head>, built from client.js and the page front matter -->
+{%- set metaDescription = description | clip -%}
+{%- set shareImage = client.domain + (image or client.brand.ogImage) -%}
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        {% if client.tracking.gtmId and client.isProduction %}
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{{ client.tracking.gtmId }}');</script>
+        {% elif client.tracking.ga4Id and client.isProduction %}
+        <!-- GA4 (only used when there's no GTM container) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ client.tracking.ga4Id }}"></script>
+        <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ client.tracking.ga4Id }}');</script>
+        {% endif %}
+
         <!-- Standard meta tags -->
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="{{ description }}">
+        <title>{{ title | plain }}</title>
+        <meta name="description" content="{{ metaDescription }}">
         <link rel="canonical" href="{{ client.domain }}{{ page.url }}">
+        {% if noindex %}<meta name="robots" content="noindex, follow">{% elif not client.indexable %}<meta name="robots" content="noindex, nofollow">{% else %}<meta name="robots" content="index, follow, max-image-preview:large">{% endif %}
+        {% if client.tracking.gscVerification %}<meta name="google-site-verification" content="{{ client.tracking.gscVerification }}">{% endif %}
+        {% if client.tracking.bingVerification %}<meta name="msvalidate.01" content="{{ client.tracking.bingVerification }}">{% endif %}
         <meta name="generator" content="{{ eleventy.generator }}">
 
         <!--Social Media Display-->
-        <meta property="og:title" content="{{ title }}"/>
-        <meta property="og:description" content="{{ description }}"/>
-        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="{{ client.name }}"/>
+        <meta property="og:title" content="{{ title | plain }}"/>
+        <meta property="og:description" content="{{ metaDescription }}"/>
+        <meta property="og:type" content="{% if pageType == "post" %}article{% else %}website{% endif %}"/>
         <meta property="og:url" content="{{ client.domain }}{{ page.url }}"/>
-        <meta property="og:image" content="{{ image or "/assets/images/logo-small.png" }}"/>
-        <meta property="og:image:secure_url" content="{{ image or "/assets/images/logo-small.png" }}"/>
+        <meta property="og:image" content="{{ shareImage }}"/>
+        <meta property="og:locale" content="en_US"/>
+        <meta name="twitter:card" content="summary_large_image"/>
 
         <!--Favicons-->
-        <!-- https://realfavicongenerator.net/ -->
         <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96"/>
         <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg"/>
         <link rel="shortcut icon" href="/assets/favicons/favicon.ico"/>
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png"/>
-        <meta name="apple-mobile-web-app-title" content="Starter Kit"/>
+        <meta name="apple-mobile-web-app-title" content="{{ client.name }}"/>
         <link rel="manifest" href="/assets/favicons/site.webmanifest"/>
 
         <!-- Preloads -->
-        <link rel="preload" as="image" href="/assets/svgs/logo-black.svg">
+        <link rel="preload" as="image" href="{{ client.brand.logo }}">
         <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/roboto-v29-latin-regular.woff2" crossorigin>
         <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/roboto-v29-latin-700.woff2" crossorigin>
 
         <!-- Sitewide Stylesheets and Scripts -->
         <link rel="stylesheet" href="/assets/css/root.css">
-        <script defer src="/assets/js/dark.js"></script>
+        <!-- Brand colors from client.js -->
+        <style>
+            :root {
+                {% if client.brand.primary %}--primary: {{ client.brand.primary }};{% endif %}
+                {% if client.brand.primaryLight %}--primaryLight: {{ client.brand.primaryLight }};{% endif %}
+                {% if client.brand.secondary %}--secondary: {{ client.brand.secondary }};{% endif %}
+                {% if client.brand.headerColor %}--headerColor: {{ client.brand.headerColor }};{% endif %}
+                {% if client.brand.bodyTextColor %}--bodyTextColor: {{ client.brand.bodyTextColor }};{% endif %}
+                {% if client.brand.dark %}--dark: {{ client.brand.dark }};{% endif %}
+            }
+        </style>
         <script defer src="/assets/js/nav.js"></script>
+        <script defer src="/assets/js/tracking.js"></script>
 
         {% block head %}{% endblock %}
 
-        <title>{{ title }}</title>
+        {% schema %}
     </head>
-    <body>
+    <body class="{% if pageType %}page-{{ pageType }}{% endif %}">
+        {% if client.tracking.gtmId and client.isProduction %}
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ client.tracking.gtmId }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        {% endif %}
+
         <!--Screen reader skip main nav-->
         <a class="skip" aria-label="skip to main content" href="#main">Click To Skip To Main Content</a>
+
+        {% if client.offers.specialOffer %}
+        <div class="cs-offer-bar">{{ client.offers.specialOffer }} <a href="/contact/">Get started</a></div>
+        {% endif %}
 
         {% include "sections/header.html" %}
         <main id="main">
@@ -52,5 +86,10 @@
         </main>
         {% include "sections/footer.html" %}
 
+        <!-- Sticky call / quote bar on phones. Most contractor leads are calls. -->
+        <div class="cs-mobile-bar" aria-label="Quick contact">
+            <a class="cs-mobile-call" href="tel:{{ client.phoneForTel }}">Call {{ client.phoneFormatted }}</a>
+            <a class="cs-mobile-quote" href="/contact/">Free Estimate</a>
+        </div>
     </body>
 </html>

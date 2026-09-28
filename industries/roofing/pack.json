@@ -1,0 +1,478 @@
+{
+  "industry": "roofing",
+  "label": "Roofing",
+  "titleNoun": "Roofing Contractor",
+  "schemaType": "RoofingContractor",
+  "gbpPrimaryCategory": "Roofing contractor",
+  "home": {
+    "topper": "Roofing in {{city}} and the {{region}}",
+    "headline": "A roof you don't have to think about.",
+    "text": "{{business}} fixes and replaces roofs for homeowners in {{city}} and nearby towns. We show up when we say we will, show you what we find, and clean up before we leave.",
+    "ctaLabel": "Get a Free Roof Check",
+    "metaText": "Roof repair, roof replacement, storm damage and gutters.",
+    "image": "/assets/images/hero.jpg"
+  },
+  "trustPoints": [
+    {
+      "title": "Local and easy to reach",
+      "text": "We work in {{city}} and the {{region}}. When you call, you get a real person who knows your job."
+    },
+    {
+      "title": "Photos, not guesses",
+      "text": "We take pictures of what we find on your roof and walk you through them. You see the problem before you pay to fix it."
+    },
+    {
+      "title": "Straight, written quotes",
+      "text": "Your quote spells out the work, the materials, and the price. No surprise add-ons after the job starts."
+    },
+    {
+      "title": "We clean up",
+      "text": "We protect your yard and plants, pick up old nails with a magnet, and haul off the mess. Your place should look better than we found it."
+    }
+  ],
+  "process": [
+    {
+      "title": "Call or book online",
+      "text": "Tell us what's going on. We'll set a time that works for you."
+    },
+    {
+      "title": "Free roof check",
+      "text": "We look at your roof, attic, and gutters, take photos, and show you what we see."
+    },
+    {
+      "title": "Clear quote",
+      "text": "You get a written quote with your options. No pressure. Take the time you need."
+    },
+    {
+      "title": "We do the work",
+      "text": "We show up on the day we set, do the job right, clean up, and walk the finished work with you."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Do you give free estimates?",
+      "a": "Yes. We'll come look at your roof, take photos, and give you a written quote. There's no cost and no pressure to sign."
+    },
+    {
+      "q": "How do I know if I need a new roof or just a repair?",
+      "a": "It depends on the age of the roof and how widespread the damage is. A few missing shingles or one bad spot can usually be repaired. If the roof is old and has problems in many places, replacing it is often the better use of your money. We'll show you photos and explain both options."
+    },
+    {
+      "q": "How long does a roof replacement take?",
+      "a": "Most homes take one to three days. Bigger roofs, steep roofs, or a lot of rotted wood under the shingles can add time. Weather can also push the schedule, and we'll keep you posted if it does."
+    },
+    {
+      "q": "Will my insurance pay for a new roof?",
+      "a": "If your roof was damaged by a storm, like hail or wind, your policy may cover some or all of it. It depends on your policy and what the adjuster finds. We can document the damage and meet with your adjuster, but your claim is between you and your insurance company."
+    },
+    {
+      "q": "Do I need to be home while you work on my roof?",
+      "a": "No. Many homeowners go to work like normal. We'll want to talk with you before we start and walk the job with you when we're done."
+    },
+    {
+      "q": "What areas do you serve?",
+      "a": "We work in {{city}} and across the {{region}}. If you're not sure we come out to you, just give us a call and ask."
+    },
+    {
+      "q": "What should I do if my roof is leaking right now?",
+      "a": "Move things away from the drip, put down a bucket, and take photos. If water is near lights or outlets, turn off power to that area. Then call us so we can tarp or patch it and stop more damage."
+    },
+    {
+      "q": "How long does a roof last?",
+      "a": "A regular asphalt shingle roof often lasts about 20 to 30 years. Metal roofs can last much longer. Hail, wind, poor attic airflow, and how well it was put on can all shorten that."
+    }
+  ],
+  "blogTopics": [
+    {
+      "title": "How to Tell If Your Roof Has Hail Damage",
+      "keyword": "hail damage roof signs",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "storm-damage-roof-repair",
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "Roof Repair or Roof Replacement: How to Decide",
+      "keyword": "roof repair vs replacement",
+      "intent": "commercial",
+      "season": "any",
+      "links": [
+        "roof-repair",
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "What Happens During a Roof Replacement, Day by Day",
+      "keyword": "roof replacement process",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "How the Roof Insurance Claim Process Works",
+      "keyword": "roof insurance claim process",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "roof-insurance-claims",
+        "storm-damage-roof-repair"
+      ]
+    },
+    {
+      "title": "What to Do Right After a Hail Storm in {{city}}",
+      "keyword": "hail storm roof damage {{city}}",
+      "intent": "local",
+      "season": "spring",
+      "links": [
+        "storm-damage-roof-repair",
+        "roof-insurance-claims"
+      ]
+    },
+    {
+      "title": "Ice Dams: Why They Form and How to Stop Them",
+      "keyword": "ice dams on roof",
+      "intent": "info",
+      "season": "winter",
+      "links": [
+        "roof-repair",
+        "gutters"
+      ]
+    },
+    {
+      "title": "How Long Does a Shingle Roof Last in the Midwest?",
+      "keyword": "how long does a shingle roof last",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "roof-replacement",
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "What Drives the Cost of a New Roof",
+      "keyword": "roof replacement cost factors",
+      "intent": "commercial",
+      "season": "any",
+      "links": [
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "Metal Roof vs Shingles: Which Is Right for Your Home?",
+      "keyword": "metal roof vs shingles",
+      "intent": "commercial",
+      "season": "any",
+      "links": [
+        "metal-roofing",
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "Why You Should Get Your Roof Checked Every Fall",
+      "keyword": "fall roof inspection",
+      "intent": "info",
+      "season": "fall",
+      "links": [
+        "roof-inspections",
+        "gutters"
+      ]
+    },
+    {
+      "title": "What to Do When Your Roof Leaks in a Storm",
+      "keyword": "roof leaking during rain what to do",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "emergency-roof-repair",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Emergency Roof Tarping in {{city}}: What to Expect",
+      "keyword": "emergency roof tarp {{city}}",
+      "intent": "local",
+      "season": "any",
+      "links": [
+        "emergency-roof-repair"
+      ]
+    },
+    {
+      "title": "How to Pick a Roofer in the {{region}}",
+      "keyword": "roofing contractor {{region}}",
+      "intent": "local",
+      "season": "any",
+      "links": [
+        "roof-replacement",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Storm Chasers: How to Spot Them After a Hail Storm",
+      "keyword": "storm chaser roofers",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "storm-damage-roof-repair",
+        "roof-insurance-claims"
+      ]
+    },
+    {
+      "title": "Wind Damage to Shingles: What It Looks Like",
+      "keyword": "wind damage shingles",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "storm-damage-roof-repair",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Does Homeowners Insurance Cover a Roof Leak?",
+      "keyword": "does insurance cover roof leak",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "roof-insurance-claims",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "What a Roof Inspection Covers (and What It Doesn't)",
+      "keyword": "what is included in a roof inspection",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "Buying a Home in {{city}}? Get the Roof Checked First",
+      "keyword": "roof inspection before buying a house {{city}}",
+      "intent": "local",
+      "season": "spring",
+      "links": [
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "Signs Your Gutters Are Hurting Your Roof",
+      "keyword": "gutter problems roof damage",
+      "intent": "info",
+      "season": "fall",
+      "links": [
+        "gutters",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Gutter Guards: Are They Worth It?",
+      "keyword": "are gutter guards worth it",
+      "intent": "commercial",
+      "season": "fall",
+      "links": [
+        "gutters"
+      ]
+    },
+    {
+      "title": "Flat Roof Options for Homes and Small Businesses",
+      "keyword": "flat roof options",
+      "intent": "commercial",
+      "season": "any",
+      "links": [
+        "flat-commercial-roofing"
+      ]
+    },
+    {
+      "title": "Why Flat Roofs Pond Water and How to Fix It",
+      "keyword": "flat roof ponding water",
+      "intent": "info",
+      "season": "summer",
+      "links": [
+        "flat-commercial-roofing",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Commercial Roof Repair in {{city}}: A Guide for Owners",
+      "keyword": "commercial roof repair {{city}}",
+      "intent": "local",
+      "season": "any",
+      "links": [
+        "flat-commercial-roofing"
+      ]
+    },
+    {
+      "title": "Is Metal Roofing Loud When It Rains?",
+      "keyword": "is a metal roof loud in rain",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "metal-roofing"
+      ]
+    },
+    {
+      "title": "Metal Roofing in the {{region}}: Is It a Good Fit?",
+      "keyword": "metal roofing {{region}}",
+      "intent": "local",
+      "season": "any",
+      "links": [
+        "metal-roofing"
+      ]
+    },
+    {
+      "title": "Signs You Need New Siding",
+      "keyword": "signs you need new siding",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "siding"
+      ]
+    },
+    {
+      "title": "Hail Damage on Siding: What to Look For",
+      "keyword": "hail damage siding",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "siding",
+        "storm-damage-roof-repair"
+      ]
+    },
+    {
+      "title": "Vinyl vs Fiber Cement Siding",
+      "keyword": "vinyl vs fiber cement siding",
+      "intent": "commercial",
+      "season": "any",
+      "links": [
+        "siding"
+      ]
+    },
+    {
+      "title": "Why Your Attic Gets So Hot (and What It Does to Your Roof)",
+      "keyword": "attic ventilation roof",
+      "intent": "info",
+      "season": "summer",
+      "links": [
+        "roof-replacement",
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "Getting Your Roof Ready for Winter",
+      "keyword": "prepare roof for winter",
+      "intent": "info",
+      "season": "fall",
+      "links": [
+        "roof-inspections",
+        "gutters"
+      ]
+    },
+    {
+      "title": "How Freeze and Thaw Cycles Wear Out Your Roof",
+      "keyword": "freeze thaw roof damage",
+      "intent": "info",
+      "season": "winter",
+      "links": [
+        "roof-repair",
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "Can You Replace a Roof in the Winter?",
+      "keyword": "can you replace a roof in winter",
+      "intent": "info",
+      "season": "winter",
+      "links": [
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "What Is Roof Flashing and Why Does It Fail?",
+      "keyword": "roof flashing repair",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Moss, Algae, and Black Streaks on Your Roof",
+      "keyword": "black streaks on roof",
+      "intent": "info",
+      "season": "summer",
+      "links": [
+        "roof-inspections",
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Roof Repair in {{city}}: Common Problems We Fix",
+      "keyword": "roof repair {{city}}",
+      "intent": "local",
+      "season": "any",
+      "links": [
+        "roof-repair"
+      ]
+    },
+    {
+      "title": "Roof Replacement in {{city}}, {{state}}: What Homeowners Should Know",
+      "keyword": "roof replacement {{city}} {{state}}",
+      "intent": "local",
+      "season": "any",
+      "links": [
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "Can New Shingles Go Over Old Ones?",
+      "keyword": "roof over existing shingles",
+      "intent": "info",
+      "season": "any",
+      "links": [
+        "roof-replacement"
+      ]
+    },
+    {
+      "title": "What Your Insurance Adjuster Looks For on a Roof",
+      "keyword": "roof insurance adjuster inspection",
+      "intent": "info",
+      "season": "spring",
+      "links": [
+        "roof-insurance-claims",
+        "roof-inspections"
+      ]
+    },
+    {
+      "title": "Storm Damage Roof Repair in the {{region}}",
+      "keyword": "storm damage roof repair {{region}}",
+      "intent": "local",
+      "season": "summer",
+      "links": [
+        "storm-damage-roof-repair",
+        "emergency-roof-repair"
+      ]
+    },
+    {
+      "title": "Tree Fell on Your Roof? Here's What to Do",
+      "keyword": "tree fell on roof what to do",
+      "intent": "info",
+      "season": "summer",
+      "links": [
+        "emergency-roof-repair",
+        "roof-insurance-claims"
+      ]
+    }
+  ],
+  "reviewPrompts": [
+    "What was going on with your roof when you called us?",
+    "How did our crew treat you and your home?",
+    "How did your yard and driveway look when we left?",
+    "Was the price and the timeline what we told you up front?",
+    "Would you tell a neighbor to call us? Why?",
+    "What's one thing you'd want other homeowners in {{city}} to know about working with us?"
+  ]
+}

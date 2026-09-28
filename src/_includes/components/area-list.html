@@ -1,0 +1,15 @@
+{#- List of towns served. Set areaTitle, areaText (optional) -#}
+<section class="cs-area-list">
+    <div class="cs-container">
+        <div class="cs-content">
+            <span class="cs-topper">Service Areas</span>
+            <h2 class="cs-title">{{ areaTitle or ("Proudly Serving the " + client.region) }}</h2>
+            {% if areaText %}<p class="cs-text">{{ areaText }}</p>{% endif %}
+        </div>
+        <ul class="cs-towns">
+            {% for area in collections.areas %}
+            <li><a href="{{ area.url }}" {% if page.url == area.url %}aria-current="page"{% endif %}>{{ area.data.town }}, {{ area.data.state }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
