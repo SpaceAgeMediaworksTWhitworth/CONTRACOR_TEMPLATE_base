@@ -23,7 +23,6 @@ collections:
           - { label: "Title", name: "title", widget: "string", hint: "Under 60 characters. Put the main search phrase near the start." }
           - { label: "URL Slug", name: "url", widget: "string", hint: 'Short, lowercase, dashes. "roof-repair-cost" becomes /blog/roof-repair-cost/' }
           - { label: "Description", name: "description", widget: "string", hint: "140-155 characters. Shows in Google results." }
-          - { label: "Author", name: "author", widget: "string", required: false }
           - { label: "Publish Date", name: "date", widget: "datetime", hint: "Future dates stay hidden until that day's rebuild." }
           - { label: "Last Updated", name: "updated", widget: "datetime", required: false }
           - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }

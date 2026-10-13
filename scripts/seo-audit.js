@@ -376,6 +376,11 @@ for (const p of pages) {
 	}
 	const json = JSON.stringify(nodes);
 	if (p.intent === "town" && (json.match(/"PostalAddress"/g) || []).length > 1) add("fail", "B44", p.url, "Town page has its own PostalAddress. Town pages use areaServed, never a town address.");
+	// No bylines: a post's author is the business node, never a Person.
+	const post = nodes.find((n) => types(n).includes("BlogPosting"));
+	if (post && (!post.author || post.author["@type"] === "Person" || (biz && post.author["@id"] !== biz["@id"])))
+		add("fail", "B44", p.url, "BlogPosting author must be the business (@id), never a person");
+	if (/class="cs-author-(box|name)"/.test(p.html)) add("fail", "B44", p.url, "Byline or author box on the page. Posts credit the business, no bylines.");
 	const faq = nodes.find((n) => types(n).includes("FAQPage"));
 	if (faq && (faq.mainEntity || []).length !== p.faqItems) add("warn", "B44", p.url, `FAQ markup has ${(faq.mainEntity || []).length} questions, page shows ${p.faqItems}`);
 	if (p.url !== "/" && indexable(p)) {

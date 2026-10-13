@@ -23,7 +23,7 @@
             render: function () {
                 // Get all the props from the collection
                 const data = this.props.entry.get("data").toJS();
-                const { title, author, date: rawDate, image } = data;
+                const { title, date: rawDate, image } = data;
                 const date = typeof rawDate === "string" ? new Date(rawDate) : rawDate;
                 let formattedDate = "";
                 if (date) {
@@ -42,8 +42,6 @@
                         <h1 className="title">{title}</h1>
 
                         <div className="metadata">
-                            <span className="author">{author}</span>
-                            <span className="dot"></span>
                             <span className="date">{formattedDate}</span>
                         </div>
 

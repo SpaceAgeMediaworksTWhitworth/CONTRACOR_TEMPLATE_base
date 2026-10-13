@@ -211,16 +211,8 @@ module.exports = function schema(data) {
 				: data.date
 					? new Date(data.date).toISOString()
 					: undefined,
-			// Author is a real person (the owner by default) so AI answers can tie the post to someone.
-			author:
-				data.author || client.ownerName
-					? {
-							"@type": "Person",
-							name: data.author || client.ownerName,
-							worksFor: { "@id": bizId },
-							url: `${domain}/about/`,
-						}
-					: { "@id": bizId },
+			// No bylines: the business (Organization) is always the author, never a Person.
+			author: { "@id": bizId },
 			publisher: { "@id": bizId },
 			mainEntityOfPage: { "@id": pageId },
 			isPartOf: { "@id": siteId },

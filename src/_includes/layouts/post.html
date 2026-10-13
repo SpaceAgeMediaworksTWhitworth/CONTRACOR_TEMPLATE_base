@@ -54,12 +54,8 @@
                 </picture>
                 <div class="cs-article-group">
                     <h1 class="cs-article-title">{{ title }}</h1>
+                    {# No bylines: posts credit the business, never a person. #}
                     <div class="cs-author-group">
-                        <picture class="cs-author-img">
-                            <img src="/assets/svgs/profile.svg" alt="Profile icon" width="32" height="32" decoding="async" loading="lazy" aria-hidden="true"/>
-                        </picture>
-                        <span class="cs-author-name">{{ author or client.ownerName or client.name }}</span>
-                        <span aria-hidden="true" class="cs-dot"></span>
                         <span class="cs-date">{{ date | postDate }}</span>
                     </div>
                 </div>
@@ -71,11 +67,6 @@
                 <section class="cs-article-content">
                     {{ content | safe }}
                 </section>
-                <aside class="cs-author-box">
-                    <strong>About the author:</strong> {{ author or client.ownerName or client.name }}{% if client.ownerName and (author == client.ownerName or not author) %} owns {{ client.name }}{% if client.yearFounded %}, serving the {{ client.region }} since {{ client.yearFounded }}{% endif %}.{% endif %}
-                    {% if client.ownerBio %}{{ client.ownerBio }}{% endif %}
-                    {% if client.licenses.length %} Licensed: {{ client.licenses | join(", ") }}.{% endif %}
-                </aside>
             </article>
         </div>
 

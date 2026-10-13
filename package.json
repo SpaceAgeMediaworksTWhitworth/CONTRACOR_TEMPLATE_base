@@ -15,7 +15,9 @@
 		"remove-demo": "node scripts/remove-demo.js",
 		"create-page": "node scripts/create-page.js",
 		"scaffold": "node scripts/scaffold.js",
-		"audit": "node scripts/seo-audit.js",
+		"audit:seo": "node scripts/seo-audit.js",
+		"contrast": "node scripts/contrast-check.js",
+		"audit": "run-s audit:seo contrast",
 		"check": "npm run build && npm run audit"
 	},
 	"repository": {
@@ -45,5 +47,9 @@
 		"netlify-plugin-cache": "^1.0.3",
 		"npm-run-all2": "^5.0.2",
 		"postcss": "^8.5.8"
+	},
+	"devDependencies": {
+		"axe-core": "^4.14.0",
+		"puppeteer-core": "^25.13.0"
 	}
 }

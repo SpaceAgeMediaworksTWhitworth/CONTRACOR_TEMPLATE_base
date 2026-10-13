@@ -1,17 +1,17 @@
 {
   "summary": {
-    "date": "2026-10-13T21:10:31.432Z",
+    "date": "2026-10-13T21:57:55.770Z",
     "site": "Ridgeline Roofing & Exteriors",
-    "pages": 40,
-    "indexable": 38,
+    "pages": 41,
+    "indexable": 39,
     "byIntent": {
-      "nav": 8,
+      "nav": 9,
       "home": 1,
       "town": 19,
       "service": 10
     },
     "fails": 0,
-    "warnings": 21
+    "warnings": 23
   },
   "targets": {
     "/": {
@@ -261,6 +261,18 @@
       "rule": "B34",
       "url": "/service-areas/wildwood-mo/",
       "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Wildwood, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B37",
+      "url": "/blog/zz-contrast-test/",
+      "msg": "Can't be reached by clicking from the home page"
+    },
+    {
+      "level": "warn",
+      "rule": "B42",
+      "url": "/blog/zz-contrast-test/",
+      "msg": "Not in sitemap.xml"
     },
     {
       "level": "info",
