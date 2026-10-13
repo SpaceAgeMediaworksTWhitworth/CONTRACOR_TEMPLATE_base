@@ -2,10 +2,26 @@
 permalink: /robots.txt
 layout: null
 eleventyExcludeFromCollections: true
+aiCrawlers: [GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot, ClaudeBot, Google-Extended, Bingbot]
 ---
+{%- if client.indexable -%}
+# Search engines and AI answer tools (ChatGPT, Perplexity, Claude, Gemini, Bing)
+# are welcome. AI answers can only quote pages they are allowed to read.
 User-agent: *
 Disallow: /admin/
 Allow: /
-
+{% for bot in aiCrawlers %}
+User-agent: {{ bot }}
+Disallow: /admin/
+Allow: /
+{% endfor %}
+{%- else -%}
+# Staging: client.indexable is false, so nothing gets crawled yet.
+User-agent: *
+Disallow: /
+{% for bot in aiCrawlers %}
+User-agent: {{ bot }}
+Disallow: /
+{% endfor %}
+{%- endif %}
 Sitemap: {{ client.domain }}/sitemap.xml
- 

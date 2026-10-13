@@ -5,6 +5,7 @@
 // "Local contractor site SEO pitfalls". Main job: every search phrase has ONE
 // page that owns it (no cannibalization), town pages aren't doorway pages, and
 // the basics (titles, H1s, canonicals, schema, links) are clean.
+// GEO checks: AI crawlers named in robots.txt, /llms.txt built, posts open with an answer block.
 //
 // Reads page targets from the source files (src/content/**) and checks the
 // built HTML in public/. Writes seo-report.json. Exits 1 on any FAIL.
@@ -395,6 +396,53 @@ for (const p of pages) {
 	const hero = p.imgs[1]; // [0] is the logo
 	if (hero && hero.loading === "lazy" && /cs-background|int-hero|hero-143/.test(p.html.slice(0, p.html.indexOf(hero.raw)).slice(-1500)))
 		add("warn", "B46", p.url, "Hero image is lazy-loaded (hurts LCP)");
+}
+
+// ── GEO: AI crawlers, llms.txt, answer-first posts ─────────────────────────
+// AI answers (ChatGPT, Perplexity, Claude, Gemini) can only quote what they may read.
+const AI_BOTS = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "ClaudeBot", "Google-Extended", "Bingbot"];
+const robotsPath = path.join(PUBLIC, "robots.txt");
+if (!fs.existsSync(robotsPath)) add("fail", "GEO", "/robots.txt", "Missing robots.txt");
+else {
+	const robots = fs.readFileSync(robotsPath, "utf8");
+	// Split into "User-agent:" groups and read each group's rules
+	const groups = robots.split(/\n(?=User-agent:)/i);
+	const ruleFor = (bot) => {
+		const g = groups.find((x) => new RegExp(`^User-agent:\\s*${bot}\\s*$`, "im").test(x));
+		return g ? (/^Disallow:\s*\/\s*$/im.test(g) ? "blocked" : "allowed") : null;
+	};
+	for (const bot of AI_BOTS) {
+		const r = ruleFor(bot);
+		if (!r) add("fail", "GEO", "/robots.txt", `No "User-agent: ${bot}" group. AI crawlers must be named.`);
+		else if (client.indexable && r === "blocked") add("fail", "GEO", "/robots.txt", `${bot} is blocked on a live site`);
+	}
+	if (!/^Sitemap:\s*\S+/im.test(robots)) add("fail", "GEO", "/robots.txt", "No Sitemap line");
+	if (!client.indexable && ruleFor("\\*") !== "blocked") add("warn", "GEO", "/robots.txt", "Staging site, but robots.txt doesn't block crawlers");
+}
+const llmsPath = path.join(PUBLIC, "llms.txt");
+if (!fs.existsSync(llmsPath)) add("fail", "GEO", "/llms.txt", "Missing llms.txt");
+else if (client.indexable) {
+	const llms = fs.readFileSync(llmsPath, "utf8");
+	if (!llms.includes(client.phoneFormatted)) add("fail", "GEO", "/llms.txt", "Business summary has no phone number");
+	for (const s of srcServices) if (!llms.includes(`/services/${s.slug}/`)) add("warn", "GEO", "/llms.txt", `Service page /services/${s.slug}/ not listed`);
+}
+// Answer block: the first paragraph of a post answers the title question in its first 60 words
+const bodyWords = (md) =>
+	md
+		.replace(/<[^>]+>/g, " ")
+		.replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+		.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+		.replace(/[*_`>#|]/g, " ");
+for (const p of srcPosts) {
+	const url = `/blog/${p.data.url || p.slug}/`;
+	if (!byUrl[url]) continue; // future-dated or hidden
+	const paras = p.content.split(/\n\s*\n/).map((x) => x.trim()).filter((x) => x && !/^(#|!\[|<(img|picture|figure))/.test(x));
+	const first = bodyWords(paras[0] || "").split(/\s+/).filter(Boolean);
+	const first60 = new Set(keyTokens(first.slice(0, 60).join(" ")));
+	const kt = keyTokens(p.data.keyword || p.data.title || "");
+	const hit = kt.filter((w) => first60.has(w)).length;
+	if (first.length < 20 || first.length > 80 || (kt.length && hit / kt.length < 0.5))
+		add("warn", "GEO", url, `No answer block: open with a 40-60 word paragraph that answers "${p.data.title}" and names it (first paragraph is ${first.length} words, ${hit}/${kt.length} keyword words in the first 60)`);
 }
 
 // ── Site-level notes ───────────────────────────────────────────────────────

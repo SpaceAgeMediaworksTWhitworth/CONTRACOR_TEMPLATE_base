@@ -1,0 +1,38 @@
+---
+permalink: /llms.txt
+layout: null
+eleventyExcludeFromCollections: true
+---
+{#- llms.txt: a plain map of the site for AI tools (ChatGPT, Perplexity, Claude).
+    Built from client.js + collections. Staging (indexable: false) gets a stub. -#}
+{%- set services = collections.services | offered(client.services) -%}
+{%- set posts = (collections.post or []) | reverse -%}
+# {{ client.name | safe }}
+{% if not client.indexable %}
+> Staging site. Not open to search engines or AI tools yet.
+{% else %}
+> {{ client.name | safe }} is a local {{ (industry.label or "home services") | lower | safe }} company based in {{ client.address.city | safe }}, {{ client.address.state }}{% if client.ownerName %}, owned by {{ client.ownerName | safe }}{% endif %}{% if client.yearFounded %}, serving the {{ client.region | safe }} since {{ client.yearFounded }}{% endif %}. Call {{ client.phoneFormatted }}{% if client.emergencyService %} (24/7 emergency service){% endif %}.{% if collections.areas.length %} Service area: {{ client.address.city | safe }}{% for a in collections.areas %}, {{ a.data.town | safe }}{% endfor %}.{% endif %}
+
+{{ client.about | safe }}
+
+## Services
+{% for s in services %}
+- [{{ s.data.name | safe }}]({{ client.domain }}{{ s.url }}): {{ (s.data.summary or s.data.description) | safe }}
+{%- endfor %}
+
+## Service areas
+{% for a in collections.areas %}
+- [{{ a.data.town | safe }}, {{ a.data.state }}]({{ client.domain }}{{ a.url }})
+{%- endfor %}
+
+## About and contact
+- [About {{ client.name | safe }}]({{ client.domain }}/about/)
+- [Reviews]({{ client.domain }}/reviews/)
+- [Contact and free estimates]({{ client.domain }}/contact/): {{ client.phoneFormatted }}{% if client.email %}, {{ client.email }}{% endif %}
+{% if posts.length %}
+## Blog
+{% for p in posts %}{% if loop.index <= 10 %}
+- [{{ p.data.title | safe }}]({{ client.domain }}{{ p.url }}){% if p.data.description %}: {{ p.data.description | safe }}{% endif %}
+{%- endif %}{% endfor %}
+{% endif %}
+{%- endif %}

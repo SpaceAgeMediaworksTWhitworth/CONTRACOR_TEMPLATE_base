@@ -110,7 +110,10 @@ module.exports = function schema(data) {
 			...Object.values(client.socials || {}),
 			client.google && client.google.businessProfileUrl,
 			...(client.credentials || []).map((c) => c.url),
-		].filter(Boolean),
+			...(client.sameAs || []),
+		]
+			.filter(Boolean)
+			.filter((u, i, a) => a.indexOf(u) === i),
 		// No aggregateRating here: Google ignores self-hosted reviews for local businesses.
 		// Reviews are shown as plain HTML instead.
 	};
@@ -208,7 +211,16 @@ module.exports = function schema(data) {
 				: data.date
 					? new Date(data.date).toISOString()
 					: undefined,
-			author: data.author ? { "@type": "Person", name: data.author } : { "@id": bizId },
+			// Author is a real person (the owner by default) so AI answers can tie the post to someone.
+			author:
+				data.author || client.ownerName
+					? {
+							"@type": "Person",
+							name: data.author || client.ownerName,
+							worksFor: { "@id": bizId },
+							url: `${domain}/about/`,
+						}
+					: { "@id": bizId },
 			publisher: { "@id": bizId },
 			mainEntityOfPage: { "@id": pageId },
 			isPartOf: { "@id": siteId },

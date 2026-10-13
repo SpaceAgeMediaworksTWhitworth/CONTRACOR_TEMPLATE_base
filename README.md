@@ -32,6 +32,8 @@ Full system notes live in the AIOS: `references/local-sites.md`, skills `/site-b
 | Layouts | `src/_includes/layouts/` (`base`, `service`, `area`, `post`) | |
 | Sections | `src/_includes/components/`, `sections/` | |
 | Schema | `src/config/schema.js` (one linked `@graph` per page) | |
+| AI crawler rules | `src/robots.html` | `/robots.txt` |
+| AI site map | `src/llms.njk` (built from `client.js` + collections) | `/llms.txt` |
 | Lead tracking | `src/assets/js/tracking.js` (dataLayer events for GTM) | |
 | SEO history | `seo/reports/`, `seo/blog-log.json`, `seo/notes.md` | |
 
@@ -39,6 +41,10 @@ Full system notes live in the AIOS: `references/local-sites.md`, skills `/site-b
 - Town pages must be different from each other. The audit flags anything over 35% the same.
 - Only real reviews, real numbers, real credentials. Schema hours must match the Google Business Profile.
 - Keep `indexable: false` until launch day.
+- GEO (AI answers): `robots.txt` names GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot, ClaudeBot,
+  Google-Extended and Bingbot. `/llms.txt` lists the business, services, towns and the 10 newest posts.
+  Both block or stub out while `indexable: false`. Posts carry `BlogPosting` with the owner as author.
+  Put real BBB/Yelp/Angi links in `client.sameAs`. Open every post with a 40-60 word answer; the audit warns if not.
 - Improvements that help every client go back into this template.
 
 The original CodeStitch README is in `docs/codestitch-kit-readme.md`.

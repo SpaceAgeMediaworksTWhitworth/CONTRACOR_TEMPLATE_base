@@ -88,6 +88,12 @@ module.exports = {
 		nextdoor: "",
 	},
 
+	// Other real profiles of this business (BBB, Yelp, Angi, Houzz, Nextdoor page...).
+	// Goes into schema sameAs with the socials and GBP link, so Google and AI tools
+	// know it's the same business. Real, live links only.
+	// e.g. ["https://www.bbb.org/us/mo/ofallon/profile/roofing-contractors/...", "https://www.yelp.com/biz/..."]
+	sameAs: [],
+
 	google: {
 		// The GBP "website" link should be the home page with UTM tags:
 		// https://www.example.com/?utm_source=gbp&utm_medium=organic
