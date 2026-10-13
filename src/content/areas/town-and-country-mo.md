@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, roof-repair, roof-inspections]
 faqs:
   - { q: "Can you repair a slate roof, or does it have to be replaced?", a: "Slate can often be repaired. A good slate roof can last a very long time, and a few broken slates can be swapped out. We will tell you honestly if yours can be saved." }
   - { q: "My cedar shake roof is getting old. What are my options?", a: "You can replace it with new cedar, or pick a designer shingle made to look like shake. We can walk you through the cost and upkeep of each." }
+gbpListed: true
 verified: false
 ---
 

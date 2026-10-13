@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, gutters, roof-repair]
 faqs:
   - { q: "My Creve Coeur ranch has a low slope roof. Does that matter?", a: "It can. Shingles need a minimum slope to shed water well. On low slopes, we use extra underlayment or a roofing material made for low slopes." }
   - { q: "My gutters overflow every fall. Can you help?", a: "Yes. We can clean them, fix sagging runs, add bigger downspouts or install gutter guards. We can quote any of these on their own or with a roof." }
+gbpListed: true
 verified: false
 ---
 

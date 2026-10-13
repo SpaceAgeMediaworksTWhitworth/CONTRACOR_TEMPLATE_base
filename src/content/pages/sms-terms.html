@@ -1,7 +1,7 @@
 ---
 permalink: "/sms-terms/"
 eleventyComputed:
-  title: "SMS Terms | {{ client.name }}"
+  title: "SMS Terms | {{ client.shortName or client.name }}"
   description: "SMS terms and conditions for text messages from {{ client.name }}."
 ---
 {% extends "layouts/base.html" %}

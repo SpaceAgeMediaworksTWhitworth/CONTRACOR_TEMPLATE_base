@@ -17,6 +17,7 @@ featuredServices: [roof-repair, roof-replacement, gutters]
 faqs:
   - { q: "My home is in a historic area of St. Charles. Can I still replace my roof?", a: "Usually yes, but there may be extra steps. Some historic districts review exterior changes. We check with the city before we start so there are no surprises." }
   - { q: "Can you work on an old roof with more than one layer of shingles?", a: "Yes. Old homes often have two or more layers. We tear them off down to the deck, check the wood, and replace any bad boards." }
+gbpListed: true
 verified: false
 ---
 

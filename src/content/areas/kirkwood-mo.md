@@ -17,6 +17,7 @@ featuredServices: [roof-repair, roof-replacement, roof-inspections]
 faqs:
   - { q: "My older Kirkwood home has a slate roof. Can you repair it?", a: "Often, yes. A few cracked or missing slates can be replaced. We will look closely and tell you honestly if the roof can be saved or is at the end of its life." }
   - { q: "Are there special rules for roofing an older home in Kirkwood?", a: "Some homes may have landmark status. Check with the city before you plan exterior changes. We help you sort this out before any work starts." }
+gbpListed: true
 verified: false
 ---
 

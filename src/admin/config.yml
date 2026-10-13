@@ -27,7 +27,16 @@ collections:
           - { label: "Publish Date", name: "date", widget: "datetime", hint: "Future dates stay hidden until that day's rebuild." }
           - { label: "Last Updated", name: "updated", widget: "datetime", required: false }
           - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
-          - { label: "Related Services", name: "services", widget: "list", required: false, hint: "Service file names, e.g. roof-repair" }
+          - { label: "Target Search Phrase", name: "keyword", widget: "string", hint: "A question or how-to phrase. Never '<service> <town>', 'near me' or 'company'. Must not match a service page." }
+          - { label: "Intent", name: "intent", widget: "hidden", default: "informational" }
+          - { label: "Main Service Page", name: "service", widget: "string", hint: "The ONE service page this post supports, e.g. roof-repair" }
+          - label: "Real Input"
+            name: "input"
+            widget: "object"
+            hint: "What real thing this post is built on. No real input = no post."
+            fields:
+              - { label: "Type", name: "type", widget: "select", options: ["job", "owner-quote", "customer-question", "local-fact"] }
+              - { label: "Detail / source", name: "detail", widget: "text" }
           - { label: "Featured Image", name: "image", widget: "image" }
           - { label: "Image Description (alt text)", name: "imageAlt", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }

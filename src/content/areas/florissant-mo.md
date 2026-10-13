@@ -18,6 +18,7 @@ faqs:
   - { q: "How much of my Florissant ranch roof will need to be redone?", a: "Most ranch roofs are simple, which helps keep cost down. We tear off the old shingles, check the deck, and replace any bad boards. We tell you about extras before we do them." }
   - { q: "Can I just add a new layer of shingles over my old roof?", a: "We do not recommend it. A tear-off lets us check the wood and install the roof the right way. It also keeps the roof from getting too heavy." }
   - { q: "I live in Old Town Florissant. Is anything different?", a: "Old Town has some of the oldest homes in the area and may have extra review for exterior work. Check with the city first. We can help." }
+gbpListed: true
 verified: false
 ---
 

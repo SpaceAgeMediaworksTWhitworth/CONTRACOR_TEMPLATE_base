@@ -1,7 +1,7 @@
 ---
 permalink: "/services/"
 eleventyComputed:
-  title: "{{ industry.label }} Services | {{ client.name }}"
+  title: "{{ industry.label }} Services | {{ client.shortName or client.name }}"
   description: "Every {{ industry.label | lower }} service {{ client.name }} offers in {{ client.address.city }} and the {{ client.region }}. Free estimates. Call {{ client.phoneFormatted }}."
 ---
 {% extends "layouts/base.html" %}

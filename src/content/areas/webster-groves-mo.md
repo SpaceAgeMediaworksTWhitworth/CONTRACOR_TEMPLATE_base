@@ -18,6 +18,7 @@ faqs:
   - { q: "My Webster Groves home is very old. Is it harder to put on a new roof?", a: "It can take more work. We may find old board decking, several layers of shingles or worn chimney flashing. We check it all and tell you the cost before we start." }
   - { q: "Does my home in Webster Groves need approval for a new roof?", a: "Some homes may be in a historic district or have landmark status. Check with the city first. We are happy to help you find out." }
   - { q: "What is the best fix for moss on a shaded roof?", a: "It depends on how bad it is. Light moss can be treated. Heavy moss often means the shingles are worn out. Trimming branches to let in more sun helps too." }
+gbpListed: true
 verified: false
 ---
 

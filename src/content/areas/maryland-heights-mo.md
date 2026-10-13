@@ -18,6 +18,7 @@ faqs:
   - { q: "Do you repair flat roofs on commercial buildings in Maryland Heights?", a: "Yes. We find leaks, fix seams and flashing, clear drains and patch damage. If the roof is worn out, we can price a replacement." }
   - { q: "Water sits on my flat roof after it rains. Is that a problem?", a: "It can be. Water that sits for days wears down the roof and finds any weak spot. Most of the time, the fix is clearing drains or fixing low spots." }
   - { q: "Do you also work on homes in Maryland Heights?", a: "Yes. We repair and replace shingle roofs on houses and inspect them after storms." }
+gbpListed: true
 verified: false
 ---
 

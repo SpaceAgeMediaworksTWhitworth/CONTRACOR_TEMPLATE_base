@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, metal-roofing, roof-repair]
 faqs:
   - { q: "My Wildwood home sits on a steep, wooded lot. Can you still get to the roof?", a: "Usually, yes. We look at the lot before the job and plan where to put the dumpster and materials. We protect your yard, trees and driveway." }
   - { q: "Is a metal roof a good fit for a home in Wildwood?", a: "It can be. Metal handles wind well, sheds snow and leaves, and lasts a long time. It costs more up front. We can price both so you can compare." }
+gbpListed: true
 verified: false
 ---
 

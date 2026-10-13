@@ -50,8 +50,12 @@
             <li class="cs-nav-li"><span class="cs-header">Contact</span></li>
             <li class="cs-contact-li">
                 <a class="cs-contact-link cs-address" href="{{ client.google.businessProfileUrl or client.address.mapLink }}" target="_blank" rel="noopener">
-                    {% if not client.address.hideStreet %}{{ client.address.lineOne }}{% if client.address.lineTwo %}, {{ client.address.lineTwo }}{% endif %}<br>{% endif %}
+                    {% if client.address.hideStreet %}
+                    Serving {{ client.address.city }}, {{ client.address.state }} and nearby towns
+                    {% else %}
+                    {{ client.address.lineOne }}{% if client.address.lineTwo %}, {{ client.address.lineTwo }}{% endif %}<br>
                     {{ client.address.city }}, {{ client.address.state }} {{ client.address.zip }}
+                    {% endif %}
                 </a>
             </li>
             <li class="cs-contact-li"><a class="cs-contact-link" href="tel:{{ client.phoneForTel }}" data-loc="footer">{{ client.phoneFormatted }}</a></li>

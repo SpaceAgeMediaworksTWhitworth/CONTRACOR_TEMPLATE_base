@@ -1,42 +1,81 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // ON-SITE SEO AUDIT (run after a build): npm run audit
-// Checks every built page in public/ for the things that actually move local
-// rankings: titles, descriptions, H1s, canonicals, schema, alt text, broken
-// internal links, thin pages, near-duplicate town pages, and orphan pages.
-// Writes seo-report.json and exits 1 if there are errors (so CI can block a deploy).
+//
+// Enforces the build-time rules (B26-B46) from the 2026-10 research report
+// "Local contractor site SEO pitfalls". Main job: every search phrase has ONE
+// page that owns it (no cannibalization), town pages aren't doorway pages, and
+// the basics (titles, H1s, canonicals, schema, links) are clean.
+//
+// Reads page targets from the source files (src/content/**) and checks the
+// built HTML in public/. Writes seo-report.json. Exits 1 on any FAIL.
+// Thresholds marked [P] are proposed defaults from the report. Tune with data.
 // ─────────────────────────────────────────────────────────────────────────────
 const fs = require("fs");
 const path = require("path");
+const matter = require("gray-matter");
 
-const PUBLIC = path.join(process.cwd(), "public");
-const client = require("../src/_data/client");
+const ROOT = process.cwd();
+const PUBLIC = path.join(ROOT, "public");
+const client = require(path.join(ROOT, "src/_data/client"));
+const fillTokens = require(path.join(ROOT, "src/config/utils/fillTokens"));
+const { norm, isHomeCity } = require(path.join(ROOT, "src/config/utils/seo"));
 
 if (!fs.existsSync(PUBLIC)) {
 	console.error("No public/ folder. Run `npm run build` first.");
 	process.exit(1);
 }
 
+const packFile = path.join(ROOT, "industries", client.industry, "pack.json");
+const pack = fs.existsSync(packFile) ? JSON.parse(fillTokens(fs.readFileSync(packFile, "utf8"), client)) : {};
+const tradeTerms = (pack.tradeTerms || [pack.titleNoun || pack.label || ""]).map(norm).filter(Boolean);
+const homeCity = norm(client.address.city);
+const DEMO = !!client.demo;
+
+// ── Thresholds ──────────────────────────────────────────────────────────────
+const T = {
+	titleFailMax: 65, titleWarnMax: 60, titleWarnMin: 30, titleFailMin: 20, // [E] Zyppy 51-60 sweet spot; cutoffs [P]
+	descWarnMax: 160, descWarnMin: 70,
+	titleSimilarWarn: 0.8, // [P]
+	townSimilarWarn: 0.6, townSimilarFail: 0.8, // [P] (84-85% overlap still ranked pre-2024, [E])
+	serviceSimilarWarn: 0.6, // [P]
+	maxTowns: 20, // [G] GBP service-area limit
+	minTownProof: 2, // [P]
+	minTownServiceLinks: 3, // [P]
+	maxClickDepth: 3, // [P]
+};
+
 // ── Helpers ─────────────────────────────────────────────────────────────────
+const STOP = new Set(["a", "an", "and", "the", "in", "of", "for", "to", "near", "me", "my", "your", "with", "on", "at", "by", "is", "do", "i", "how", "what"]);
+const STATES = new Set(["al","ak","az","ar","ca","co","ct","de","fl","ga","hi","id","il","in","ia","ks","ky","la","me","md","ma","mi","mn","ms","mo","mt","ne","nv","nh","nj","nm","ny","nc","nd","oh","ok","or","pa","ri","sc","sd","tn","tx","ut","vt","va","wa","wv","wi","wy"]);
+const brandTokens = new Set(norm(`${client.name} ${client.shortName || ""}`).split(" "));
+const keyTokens = (s) => norm(s).split(" ").filter((w) => w && !STOP.has(w) && !STATES.has(w));
+const normKeyword = (s) => keyTokens(s).join(" ");
+const jaccardSets = (a, b) => {
+	let inter = 0;
+	for (const x of a) if (b.has(x)) inter++;
+	return inter / (a.size + b.size - inter || 1);
+};
+const has = (text, phrase) => ` ${norm(text)} `.includes(` ${norm(phrase)} `);
+
 const walk = (dir) =>
 	fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
 		const p = path.join(dir, d.name);
 		if (d.isDirectory()) return d.name === "admin" || d.name === "assets" ? [] : walk(p);
 		return d.name.endsWith(".html") ? [p] : [];
 	});
-
 const decode = (s) =>
-	s
+	String(s)
 		.replace(/&amp;/g, "&")
-		.replace(/&#39;|&#x27;/g, "'")
+		.replace(/&#39;|&#x27;|&apos;/g, "'")
 		.replace(/&quot;/g, '"')
 		.replace(/&lt;/g, "<")
 		.replace(/&gt;/g, ">")
 		.replace(/&nbsp;/g, " ");
-const first = (html, re) => {
-	const m = html.match(re);
-	return m ? decode(m[1].trim()) : null;
-};
-// Parse attributes from a tag, quoted or not (the minifier drops quotes)
+const stripTags = (html) =>
+	decode(String(html).replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " "))
+		.replace(/\s+/g, " ")
+		.trim();
+// Attributes from a tag, quoted or not (the minifier drops quotes)
 const attrs = (tag) => {
 	const out = {};
 	for (const m of tag.matchAll(/([\w:-]+)=(?:"([^"]*)"|'([^']*)'|([^\s>]+))/g)) out[m[1].toLowerCase()] = decode(m[2] ?? m[3] ?? m[4] ?? "");
@@ -44,153 +83,321 @@ const attrs = (tag) => {
 };
 const tags = (html, name) => [...html.matchAll(new RegExp(`<${name}\\b[^>]*>`, "gi"))].map((m) => ({ raw: m[0], ...attrs(m[0]) }));
 const metaContent = (html, name) => (tags(html, "meta").find((t) => t.name === name) || {}).content || null;
-
-const textOf = (html) =>
-	decode(
-		html
-			.replace(/<script[\s\S]*?<\/script>/gi, " ")
-			.replace(/<style[\s\S]*?<\/style>/gi, " ")
-			.replace(/<[^>]+>/g, " "),
-	)
-		.replace(/\s+/g, " ")
-		.trim();
-const words = (s) => (s ? s.split(/\s+/).filter(Boolean).length : 0);
-
-// Word shingles for near-duplicate checks
 const shingles = (text, n = 5) => {
-	const w = text.toLowerCase().replace(/[^a-z0-9\s]/g, "").split(/\s+/);
+	const w = norm(text).split(" ");
 	const set = new Set();
 	for (let i = 0; i <= w.length - n; i++) set.add(w.slice(i, i + n).join(" "));
 	return set;
 };
-const jaccard = (a, b) => {
-	let inter = 0;
-	for (const x of a) if (b.has(x)) inter++;
-	return inter / (a.size + b.size - inter || 1);
-};
 
-// ── Collect pages ───────────────────────────────────────────────────────────
-const files = walk(PUBLIC);
+// ── Source front matter (page targets) ─────────────────────────────────────
+const readDir = (rel) => {
+	const dir = path.join(ROOT, rel);
+	if (!fs.existsSync(dir)) return [];
+	return fs
+		.readdirSync(dir)
+		.filter((f) => f.endsWith(".md"))
+		.map((f) => ({ slug: path.basename(f, ".md"), file: path.join(rel, f), ...matter(fs.readFileSync(path.join(dir, f), "utf8")) }));
+};
+const srcServices = readDir("src/content/services").filter(
+	(s) => !client.services.length || client.services.includes(s.slug),
+);
+const srcAreas = readDir("src/content/areas");
+const srcPosts = readDir("src/content/blog").filter((p) => !p.data.draft);
+const liveTowns = srcAreas.filter((a) => !isHomeCity(a.data.town, a.data.state, client));
+const townNames = srcAreas.map((a) => a.data.town).filter(Boolean);
+
+// URL -> { intent, keyword, src }
+const targets = {};
+targets["/"] = { intent: "home", keyword: `${tradeTerms[0] || ""} ${client.address.city}` };
+for (const s of srcServices) targets[`/services/${s.slug}/`] = { intent: "service", keyword: s.data.keyword || s.data.name, src: s };
+for (const a of liveTowns)
+	targets[`/service-areas/${a.slug}/`] = { intent: "town", keyword: a.data.keyword || `${tradeTerms[0] || ""} ${a.data.town}`, src: a };
+for (const p of srcPosts) targets[`/blog/${p.data.url || p.slug}/`] = { intent: "informational", keyword: p.data.keyword, src: p };
+
+// ── Built pages ─────────────────────────────────────────────────────────────
 const urlOf = (file) => {
-	let rel = "/" + path.relative(PUBLIC, file).replace(/\\/g, "/");
+	const rel = "/" + path.relative(PUBLIC, file).replace(/\\/g, "/");
 	return rel.endsWith("/index.html") ? rel.slice(0, -10) : rel;
 };
-
-const pages = files.map((file) => {
+const pages = walk(PUBLIC).map((file) => {
 	const html = fs.readFileSync(file, "utf8");
-	const main = first(html, /<main[^>]*>([\s\S]*?)<\/main>/i) || "";
-	// "Body" text = the article/prose part, where unique copy lives
+	const url = urlOf(file);
 	const prose = (html.match(/<article[^>]*class="?[^">]*cs-prose[^>]*>([\s\S]*?)<\/article>/i) || [])[1] || "";
+	const anchors = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].map((m) => ({
+		href: (attrs(m[1]).href || "").split(/[#?]/)[0],
+		text: stripTags(m[2]),
+		raw: m[1],
+	}));
+	const mainHtml = (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i) || [])[1] || "";
+	const mainHrefs = [...mainHtml.matchAll(/<a\b([^>]*)>/gi)].map((m) => (attrs(m[1]).href || "").split(/[#?]/)[0]);
+	const t = targets[url] || {};
 	return {
+		mainHrefs, // links in the page body only (not header/footer)
 		file,
-		url: urlOf(file),
+		url,
 		html,
-		title: first(html, /<title>([\s\S]*?)<\/title>/i),
+		intent: t.intent || "nav",
+		keyword: t.keyword,
+		src: t.src,
+		titles: [...html.matchAll(/<title>([\s\S]*?)<\/title>/gi)].map((m) => decode(m[1].trim())),
+		h1s: [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => stripTags(m[1])),
 		description: metaContent(html, "description"),
-		canonical: (tags(html, "link").find((t) => t.rel === "canonical") || {}).href || null,
+		canonical: (tags(html, "link").find((x) => x.rel === "canonical") || {}).href || null,
 		robots: metaContent(html, "robots") || "",
-		h1s: (html.match(/<h1[\s>]/gi) || []).length,
 		schema: [...html.matchAll(/<script type="?application\/ld\+json"?>([\s\S]*?)<\/script>/gi)].map((m) => m[1]),
-		imgsNoAlt: tags(html, "img").filter((t) => !/\balt\b/i.test(t.raw)).length,
-		links: tags(html, "a")
-			.map((t) => (t.href || "").split(/[#?]/)[0])
-			.filter(Boolean),
-		mainWords: words(textOf(main)),
-		proseText: textOf(prose),
-		type: /\/service-areas\/[^/]+\/$/.test(urlOf(file))
-			? "area"
-			: /\/services\/[^/]+\/$/.test(urlOf(file))
-				? "service"
-				: /\/blog\/[^/]+\/$/.test(urlOf(file))
-					? "post"
-					: "page",
+		imgs: tags(html, "img"),
+		anchors,
+		proseText: stripTags(prose),
+		faqItems: (html.match(/class="?cs-faq-item/g) || []).length,
 	};
 });
+for (const p of pages) p.title = p.titles[0] || null;
 
-// Audit the site as if it were live. "noindex, follow" = this page is noindex on purpose
-// (thank-you, 404). "noindex, nofollow" = the whole site is still in staging.
+// "noindex, follow" = intentionally noindex (thank-you, 404). "noindex, nofollow" = whole site in staging.
 const indexable = (p) => !/noindex,\s*follow/i.test(p.robots) && !p.url.endsWith("404.html");
+const live = pages.filter(indexable);
+const byUrl = Object.fromEntries(pages.map((p) => [p.url, p]));
+
 const issues = [];
-const add = (level, url, msg) => issues.push({ level, url, msg });
+const add = (level, rule, url, msg) => {
+	if (!issues.some((i) => i.rule === rule && i.url === url && i.msg === msg)) issues.push({ level, rule, url, msg });
+};
+const proofLevel = DEMO ? "warn" : "fail";
 
-// ── Per-page checks ─────────────────────────────────────────────────────────
-const MIN_WORDS = { area: 250, service: 400, post: 600 };
+// ── B26-B27: one target keyword per page, no two pages share one ────────────
+for (const p of live) {
+	if (["home", "service", "town", "informational"].includes(p.intent) && !p.keyword)
+		add("fail", "B26", p.url, `No target keyword. Add "keyword:" to ${p.src ? p.src.file : "the page"}.`);
+}
+const kwSeen = {};
+for (const p of live.filter((p) => p.keyword)) {
+	const k = normKeyword(p.keyword);
+	(kwSeen[k] = kwSeen[k] || []).push(p.url);
+}
+for (const [k, urls] of Object.entries(kwSeen))
+	if (urls.length > 1) add("fail", "B27", urls.join(" + "), `Pages share the target "${k}". One page per search phrase: merge or re-aim one.`);
+
+// ── B28-B29: titles, H1s, descriptions ──────────────────────────────────────
 for (const p of pages) {
-	if (!p.title) add("error", p.url, "Missing <title>");
-	else if (p.title.length > 65) add("warn", p.url, `Title is ${p.title.length} chars (aim for 65 or less): "${p.title}"`);
-	else if (p.title.length < 25) add("warn", p.url, `Title is short (${p.title.length} chars): "${p.title}"`);
-
-	if (!p.description) add("error", p.url, "Missing meta description");
-	else if (p.description.length > 160) add("warn", p.url, `Description is ${p.description.length} chars (aim for 155 or less)`);
-	else if (p.description.length < 70) add("warn", p.url, `Description is short (${p.description.length} chars)`);
-
-	if (p.h1s !== 1 && indexable(p)) add("error", p.url, `Has ${p.h1s} <h1> tags (need exactly 1)`);
-	if (!p.canonical) add("error", p.url, "Missing canonical link");
-	else if (!p.canonical.startsWith(client.domain)) add("error", p.url, `Canonical doesn't use client.domain: ${p.canonical}`);
-
-	if (!p.schema.length && indexable(p)) add("warn", p.url, "No JSON-LD schema");
-	for (const s of p.schema) {
-		try {
-			JSON.parse(s);
-		} catch (e) {
-			add("error", p.url, `Schema JSON is invalid: ${e.message}`);
-		}
+	if (p.titles.length !== 1) add("fail", "B29", p.url, `Has ${p.titles.length} <title> tags (need 1)`);
+	const t = p.title || "";
+	if (t.length > T.titleFailMax || (t && t.length < T.titleFailMin)) add("fail", "B29", p.url, `Title is ${t.length} chars (keep ${T.titleFailMin}-${T.titleFailMax}): "${t}"`);
+	else if (t.length > T.titleWarnMax || (t.length < T.titleWarnMin && p.intent !== "nav")) add("warn", "B29", p.url, `Title is ${t.length} chars (51-60 gets rewritten least): "${t}"`);
+	if (!p.description) add("fail", "B28", p.url, "Missing meta description");
+	else if (p.description.length > T.descWarnMax || p.description.length < T.descWarnMin)
+		add("warn", "B28", p.url, `Description is ${p.description.length} chars (aim for ${T.descWarnMin}-155)`);
+	if (!indexable(p)) continue;
+	if (p.h1s.length !== 1) add("fail", "B29", p.url, `Has ${p.h1s.length} <h1> tags (need exactly 1)`);
+	if (p.keyword && p.h1s[0]) {
+		const kt = keyTokens(p.keyword);
+		const ht = new Set(keyTokens(p.h1s[0]));
+		const hit = kt.filter((w) => ht.has(w)).length;
+		if (kt.length && hit / kt.length < 0.5) add("warn", "B29", p.url, `H1 "${p.h1s[0]}" doesn't carry the target "${p.keyword}"`);
 	}
-	if (p.imgsNoAlt) add("warn", p.url, `${p.imgsNoAlt} image(s) missing an alt attribute`);
+}
+const dupes = (label, get) => {
+	const seen = {};
+	for (const p of live) {
+		const v = get(p);
+		if (v) (seen[norm(v)] = seen[norm(v)] || []).push(p.url);
+	}
+	for (const [v, urls] of Object.entries(seen)) if (urls.length > 1) add("fail", "B28", urls.join(" + "), `Duplicate ${label}: "${v}"`);
+};
+dupes("title", (p) => p.title);
+dupes("H1", (p) => p.h1s[0]);
+dupes("description", (p) => p.description);
+const titleTokens = (t) => new Set(keyTokens(t).filter((w) => !brandTokens.has(w)));
+for (let i = 0; i < live.length; i++)
+	for (let j = i + 1; j < live.length; j++) {
+		const a = titleTokens(live[i].title || ""),
+			b = titleTokens(live[j].title || "");
+		if (a.size >= 2 && b.size >= 2 && jaccardSets(a, b) >= T.titleSimilarWarn)
+			add("warn", "B28", `${live[i].url} + ${live[j].url}`, `Titles are ${Math.round(jaccardSets(a, b) * 100)}% the same`);
+	}
 
-	const min = MIN_WORDS[p.type];
-	const proseWords = words(p.proseText);
-	if (min && proseWords < min) add("warn", p.url, `Thin ${p.type} page: ${proseWords} words of unique copy (aim for ${min}+)`);
+// ── B30-B32: who owns which phrase ─────────────────────────────────────────
+for (const p of live.filter((p) => p.url !== "/")) {
+	for (const field of [p.title, p.h1s[0]].filter(Boolean)) {
+		const term = tradeTerms.find((tt) => has(field, tt));
+		if (term && has(field, client.address.city))
+			add("fail", "B30", p.url, `"${field}" pairs "${term}" with the home city. Only the home page may target that.`);
+	}
+}
+const homeCityFiles = srcAreas.filter((a) => isHomeCity(a.data.town, a.data.state, client));
+const redirectsTxt = fs.existsSync(path.join(PUBLIC, "_redirects")) ? fs.readFileSync(path.join(PUBLIC, "_redirects"), "utf8") : "";
+for (const a of homeCityFiles) {
+	const from = `/service-areas/${a.slug}/`;
+	if (byUrl[from]) add("fail", "B31", from, "Home-city town page is live. The home page owns the home city.");
+	if (!redirectsTxt.includes(`${from} `)) add("fail", "B31", from, "Home-city town page has no 301 to /");
+}
+const serviceKeys = srcServices.map((s) => ({ slug: s.slug, phrases: [s.data.name, s.data.keyword].filter(Boolean) }));
+const commercial = ["near me", "hire", "company", "companies", "contractor", "contractors", "best", ...tradeTerms];
+for (const p of live.filter((p) => p.intent === "informational")) {
+	const fields = [p.title, p.h1s[0], p.keyword].filter(Boolean);
+	for (const f of fields) {
+		const svc = serviceKeys.find((s) => s.phrases.some((ph) => has(f, ph)));
+		const town = townNames.find((tn) => has(f, tn)) || (has(f, client.address.city) ? client.address.city : null);
+		if (svc && town) add("fail", "B32", p.url, `"${f}" targets a service + town ("${town}"). That belongs to the service page, not a post.`);
+		const word = commercial.find((c) => has(f, c));
+		if (word && f === p.keyword) add("fail", "B32", p.url, `Post keyword "${f}" has a hiring word ("${word}"). Posts answer questions; service pages sell.`);
+	}
+	if (p.keyword) {
+		const clash = serviceKeys.find((s) => s.phrases.some((ph) => normKeyword(ph) === normKeyword(p.keyword)));
+		if (clash) add("fail", "B32", p.url, `Post keyword "${p.keyword}" is the service page's target (/services/${clash.slug}/). Put it on that page instead.`);
+	}
+	if (p.src && !p.src.data.input) add(proofLevel, "A22", p.url, "Post has no real input (job, owner quote, customer question, local fact). No input = no post.");
 }
 
-// ── Duplicates ──────────────────────────────────────────────────────────────
-const dupes = (key) => {
-	const seen = {};
-	for (const p of pages.filter(indexable)) if (p[key]) (seen[p[key]] = seen[p[key]] || []).push(p.url);
-	for (const [val, urls] of Object.entries(seen))
-		if (urls.length > 1) add("error", urls.join(", "), `Duplicate ${key}: "${val}"`);
-};
-dupes("title");
-dupes("description");
-
-// Near-duplicate town/service copy (the #1 reason town pages don't rank)
-for (const type of ["area", "service"]) {
-	const group = pages.filter((p) => p.type === type).map((p) => ({ ...p, sh: shingles(p.proseText) }));
+// ── B33-B35: town pages (doorway / scaled-content guardrails) ───────────────
+if (liveTowns.length > T.maxTowns) add("fail", "B33", "/service-areas/", `${liveTowns.length} town pages (max ${T.maxTowns}, the GBP service-area limit)`);
+for (const a of liveTowns) {
+	const url = `/service-areas/${a.slug}/`;
+	const d = a.data;
+	if (!d.gbpListed) add("fail", "B33", url, "Town isn't on the GBP service area list (set gbpListed: true once it is)");
+	const jobs = (d.jobs || []).filter((j) => j.source);
+	const facts = (d.localFacts || []).filter((f) => f.source);
+	const reviews = (client.reviews.featured || []).filter((r) => norm(r.town) === norm(d.town));
+	const named = (d.neighborhoods || []).length || (d.landmarks || []).length ? 1 : 0;
+	const proof = jobs.length + facts.length + reviews.length + named;
+	if (proof < T.minTownProof)
+		add(proofLevel, "B34", url, `Only ${proof} piece(s) of real local proof (need ${T.minTownProof}+: a job here, a review naming ${d.town}, a sourced local fact, named neighborhoods)`);
+	for (const j of d.jobs || []) if (!j.source) add("fail", "B34", url, `Job "${j.title}" has no source`);
+	for (const f of d.localFacts || []) if (!f.source) add("fail", "B34", url, `Local fact has no source: "${f.text}"`);
+}
+const simCheck = (type, warn, fail) => {
+	const group = live.filter((p) => p.intent === type).map((p) => ({ url: p.url, sh: shingles(p.proseText) }));
 	for (let i = 0; i < group.length; i++)
 		for (let j = i + 1; j < group.length; j++) {
-			const sim = jaccard(group[i].sh, group[j].sh);
-			if (sim > 0.35)
-				add("warn", `${group[i].url} + ${group[j].url}`, `${type} pages are ${Math.round(sim * 100)}% the same. Rewrite one.`);
+			const sim = jaccardSets(group[i].sh, group[j].sh);
+			const lvl = fail && sim >= fail ? "fail" : sim >= warn ? "warn" : null;
+			if (lvl) add(lvl, type === "town" ? "B35" : "B36", `${group[i].url} + ${group[j].url}`, `${type} page copy is ${Math.round(sim * 100)}% the same. Rewrite one.`);
 		}
-}
+};
+simCheck("town", T.townSimilarWarn, T.townSimilarFail);
+simCheck("service", T.serviceSimilarWarn, null);
 
-// ── Links: broken + orphans ─────────────────────────────────────────────────
+// ── B37-B40, B42-B43: links ────────────────────────────────────────────────
 const known = new Set(pages.map((p) => p.url));
-const linkedTo = new Set();
+const redirectFrom = new Set([...redirectsTxt.matchAll(/^(\/\S*)\s+\S+/gm)].map((m) => m[1]));
+const inbound = {};
+const graph = {};
 for (const p of pages) {
-	for (const href of p.links) {
-		if (!href.startsWith("/") || href.startsWith("//")) continue;
-		if (href.startsWith("/assets/") || href.startsWith("/admin")) continue;
-		const target = href.endsWith("/") || href.endsWith(".html") ? href : href + "/";
-		if (known.has(target)) linkedTo.add(target);
-		else add("error", p.url, `Broken internal link: ${href}`);
+	graph[p.url] = new Set();
+	for (const a of p.anchors) {
+		const h = a.href;
+		if (!h.startsWith("/") || h.startsWith("//") || h.startsWith("/assets/") || h.startsWith("/admin")) continue;
+		if (redirectFrom.has(h)) add("fail", "B42", p.url, `Links to a redirected URL: ${h}`);
+		if (h !== h.toLowerCase() || /[_ ]/.test(h) || (!h.endsWith("/") && !/\.\w+$/.test(h))) add("warn", "B43", p.url, `Odd internal URL style: ${h}`);
+		const target = h.endsWith("/") || /\.\w+$/.test(h) ? h : h + "/";
+		if (!known.has(target)) {
+			add("fail", "B37", p.url, `Broken internal link: ${h}`);
+			continue;
+		}
+		if (target !== p.url) (inbound[target] = inbound[target] || new Set()).add(p.url);
+		graph[p.url].add(target);
 	}
 }
-for (const p of pages.filter(indexable)) {
-	if (p.url !== "/" && !linkedTo.has(p.url)) add("warn", p.url, "Orphan page: nothing links to it");
+// Click depth from the home page
+const depth = { "/": 0 };
+const queue = ["/"];
+while (queue.length) {
+	const u = queue.shift();
+	for (const v of graph[u] || []) if (depth[v] === undefined) (depth[v] = depth[u] + 1), queue.push(v);
+}
+for (const p of live) {
+	if (p.url === "/") continue;
+	if (!inbound[p.url] && ["service", "town", "informational"].includes(p.intent)) add("fail", "B37", p.url, "Orphan: no internal links point here");
+	else if (depth[p.url] === undefined) add("warn", "B37", p.url, "Can't be reached by clicking from the home page");
+	else if (depth[p.url] > T.maxClickDepth) add("fail", "B37", p.url, `${depth[p.url]} clicks from home (max ${T.maxClickDepth})`);
+}
+for (const p of live.filter((p) => p.intent === "town")) {
+	const svcLinks = new Set(p.mainHrefs.filter((h) => /^\/services\/[^/]+\/$/.test(h)));
+	if (svcLinks.size < T.minTownServiceLinks) add("fail", "B38", p.url, `Links to ${svcLinks.size} service pages (need ${T.minTownServiceLinks}+). Funnel-only town pages look like doorways.`);
+}
+for (const p of live.filter((p) => p.intent === "informational")) {
+	if (!p.mainHrefs.some((h) => /^\/services\/[^/]+\/$/.test(h))) add("fail", "B40", p.url, "Post doesn't link to a service page (set service: in front matter)");
+}
+// B39: one anchor phrase -> one URL (nav-type phrases allowed)
+const ALLOW = /^(home|contact|contact us|about|about us|blog|reviews|services|our services|all services|service areas|all service areas|learn more|read more|see all service areas|get a free estimate|free estimate|request an estimate|get my free estimate|back to home|privacy policy|sms terms|get started|continue reading|click to skip to main content)\b/i;
+const phraseTo = {};
+for (const p of pages)
+	for (const a of p.anchors) {
+		if (!a.href.startsWith("/") || !a.text || a.text.length > 60 || ALLOW.test(a.text) || /^call\b|^\(?\d{3}/i.test(a.text)) continue;
+		const k = norm(a.text);
+		(phraseTo[k] = phraseTo[k] || new Set()).add(a.href);
+	}
+for (const [k, hrefs] of Object.entries(phraseTo))
+	if (hrefs.size > 1) add("fail", "B39", [...hrefs].join(" + "), `Link text "${k}" points to ${hrefs.size} different pages. One phrase, one page.`);
+
+// ── B41: canonical + noindex ───────────────────────────────────────────────
+for (const p of pages) {
+	if (!p.canonical) add("fail", "B41", p.url, "Missing canonical");
+	else if (p.canonical !== `${client.domain}${p.url}`) add("fail", "B41", p.url, `Canonical isn't self-referencing: ${p.canonical}`);
+	if (["home", "service", "town"].includes(p.intent) && /noindex,\s*follow/i.test(p.robots)) add("fail", "B41", p.url, "Money page is noindex");
 }
 
-// ── Sitemap + robots ────────────────────────────────────────────────────────
-const sitemapPath = path.join(PUBLIC, "sitemap.xml");
-if (fs.existsSync(sitemapPath)) {
-	const sm = fs.readFileSync(sitemapPath, "utf8");
-	for (const p of pages.filter(indexable))
-		if (!sm.includes(`${client.domain}${p.url}<`)) add("warn", p.url, "Not in sitemap.xml");
-	for (const p of pages.filter((p) => !indexable(p)))
-		if (sm.includes(`${client.domain}${p.url}<`) && client.indexable) add("warn", p.url, "noindex page is in sitemap.xml");
-} else add("error", "/sitemap.xml", "Missing sitemap.xml");
+// ── B42: sitemap ───────────────────────────────────────────────────────────
+const smPath = path.join(PUBLIC, "sitemap.xml");
+if (!fs.existsSync(smPath)) add("fail", "B42", "/sitemap.xml", "Missing sitemap.xml");
+else {
+	const sm = fs.readFileSync(smPath, "utf8");
+	const inSm = new Set([...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(client.domain, "")));
+	for (const p of live) if (!inSm.has(p.url)) add("warn", "B42", p.url, "Not in sitemap.xml");
+	for (const u of inSm) {
+		if (redirectFrom.has(u)) add("fail", "B42", u, "Redirected URL is in sitemap.xml");
+		if (byUrl[u] && !indexable(byUrl[u])) add("warn", "B42", u, "noindex page is in sitemap.xml");
+	}
+}
 
-// Brand colors vs white text (buttons, bars). WCAG AA = 4.5:1
+// ── B44-B45: schema ────────────────────────────────────────────────────────
+const addresses = new Set();
+for (const p of pages) {
+	if (!p.schema.length) {
+		if (indexable(p)) add("warn", "B44", p.url, "No JSON-LD");
+		continue;
+	}
+	let nodes = [];
+	for (const s of p.schema) {
+		try {
+			const j = JSON.parse(s);
+			nodes = nodes.concat(j["@graph"] || [j]);
+		} catch (e) {
+			add("fail", "B44", p.url, `Schema JSON is invalid: ${e.message}`);
+		}
+	}
+	const types = (n) => [].concat(n["@type"] || []);
+	const biz = nodes.find((n) => types(n).includes("LocalBusiness"));
+	if (biz) {
+		if (biz.aggregateRating || biz.review) add("fail", "B44", p.url, "aggregateRating/review on the business node (self-serving reviews aren't allowed)");
+		if (biz.address) addresses.add(JSON.stringify(biz.address));
+		if (biz.telephone && !p.html.includes(biz.telephone.replace(/[()]/g, "").slice(-8))) add("warn", "B44", p.url, "Schema phone not visible on the page");
+	}
+	const json = JSON.stringify(nodes);
+	if (p.intent === "town" && (json.match(/"PostalAddress"/g) || []).length > 1) add("fail", "B44", p.url, "Town page has its own PostalAddress. Town pages use areaServed, never a town address.");
+	const faq = nodes.find((n) => types(n).includes("FAQPage"));
+	if (faq && (faq.mainEntity || []).length !== p.faqItems) add("warn", "B44", p.url, `FAQ markup has ${(faq.mainEntity || []).length} questions, page shows ${p.faqItems}`);
+	if (p.url !== "/" && indexable(p)) {
+		const bc = nodes.find((n) => types(n).includes("BreadcrumbList"));
+		const items = (bc && bc.itemListElement) || [];
+		if (items.length < 2 || items.some((it, i) => it.position !== i + 1)) add("fail", "B45", p.url, "Missing or broken BreadcrumbList");
+	}
+}
+if (addresses.size > 1) add("fail", "B44", "(site)", `${addresses.size} different business addresses in schema. There should be one.`);
+if (client.address.hideStreet && [...addresses].some((a) => JSON.parse(a).streetAddress)) add("fail", "B44", "(site)", "Address is hidden on GBP but a street address is in schema");
+
+// ── B46: images ────────────────────────────────────────────────────────────
+for (const p of pages) {
+	const noAlt = p.imgs.filter((i) => !/\balt\b/i.test(i.raw)).length;
+	const noSize = p.imgs.filter((i) => !i.width || !i.height).length;
+	if (noAlt) add("warn", "B46", p.url, `${noAlt} image(s) missing alt`);
+	if (noSize) add("warn", "B46", p.url, `${noSize} image(s) missing width/height (layout shift)`);
+	const hero = p.imgs[1]; // [0] is the logo
+	if (hero && hero.loading === "lazy" && /cs-background|int-hero|hero-143/.test(p.html.slice(0, p.html.indexOf(hero.raw)).slice(-1500)))
+		add("warn", "B46", p.url, "Hero image is lazy-loaded (hurts LCP)");
+}
+
+// ── Site-level notes ───────────────────────────────────────────────────────
 const lum = (hex) => {
 	const c = hex.replace("#", "").match(/.{2}/g).map((h) => parseInt(h, 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
 	return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
@@ -199,36 +406,30 @@ for (const key of ["primary", "secondary"]) {
 	const hex = client.brand && client.brand[key];
 	if (!hex || !/^#[0-9a-f]{6}$/i.test(hex)) continue;
 	const ratio = 1.05 / (lum(hex) + 0.05);
-	if (ratio < 4.5) add("warn", "(site)", `brand.${key} ${hex} is only ${ratio.toFixed(1)}:1 against white text. Darken it to pass 4.5:1.`);
+	if (ratio < 4.5) add("warn", "A11Y", "(site)", `brand.${key} ${hex} is ${ratio.toFixed(1)}:1 against white text. Darken it to pass 4.5:1.`);
 }
+if (DEMO) add("info", "-", "(site)", "client.demo is true: missing local proof is a warning, not a failure.");
+if (!client.indexable) add("info", "-", "(site)", "client.indexable is false: every page is noindex. Flip it at launch.");
+if (!client.tracking.gtmId && !client.tracking.ga4Id) add("info", "-", "(site)", "No GTM or GA4 ID in client.js");
+if (!client.google.businessProfileUrl) add("info", "-", "(site)", "No Google Business Profile URL in client.js");
 
-if (!client.indexable) add("info", "(site)", "client.indexable is false: every page is noindex. Flip it at launch.");
-if (!client.tracking.gtmId && !client.tracking.ga4Id) add("info", "(site)", "No GTM or GA4 ID in client.js");
-if (!client.tracking.gscVerification) add("info", "(site)", "No Search Console verification tag (fine if verified by DNS)");
-if (!client.reviews.count) add("info", "(site)", "No review count in client.js. Add real Google numbers for trust + schema.");
-if (!client.google.businessProfileUrl) add("info", "(site)", "No Google Business Profile URL. Add it (it's linked in schema sameAs).");
-
-// ── Report ──────────────────────────────────────────────────────────────────
+// ── Report ─────────────────────────────────────────────────────────────────
 const count = (lvl) => issues.filter((i) => i.level === lvl).length;
 const summary = {
 	date: new Date().toISOString(),
 	site: client.name,
-	domain: client.domain,
 	pages: pages.length,
-	indexable: pages.filter(indexable).length,
-	byType: pages.reduce((a, p) => ((a[p.type] = (a[p.type] || 0) + 1), a), {}),
-	errors: count("error"),
+	indexable: live.length,
+	byIntent: live.reduce((a, p) => ((a[p.intent] = (a[p.intent] || 0) + 1), a), {}),
+	fails: count("fail"),
 	warnings: count("warn"),
-	info: count("info"),
 };
-fs.writeFileSync(path.join(process.cwd(), "seo-report.json"), JSON.stringify({ summary, issues }, null, 2));
+fs.writeFileSync(path.join(ROOT, "seo-report.json"), JSON.stringify({ summary, targets: Object.fromEntries(Object.entries(targets).map(([u, t]) => [u, { intent: t.intent, keyword: t.keyword }])), issues }, null, 2));
 
-const icon = { error: "✖", warn: "▲", info: "·" };
-for (const lvl of ["error", "warn", "info"])
-	for (const i of issues.filter((x) => x.level === lvl)) console.log(`${icon[lvl]} ${i.url}  ${i.msg}`);
+const icon = { fail: "✖ FAIL", warn: "▲ warn", info: "·" };
+for (const lvl of ["fail", "warn", "info"])
+	for (const i of issues.filter((x) => x.level === lvl)) console.log(`${icon[lvl]} [${i.rule}] ${i.url}  ${i.msg}`);
 console.log(
-	`\n${summary.pages} pages (${Object.entries(summary.byType)
-		.map(([k, v]) => `${v} ${k}`)
-		.join(", ")}). ${summary.errors} errors, ${summary.warnings} warnings. Full report: seo-report.json`,
+	`\n${summary.pages} pages (${Object.entries(summary.byIntent).map(([k, v]) => `${v} ${k}`).join(", ")}). ${summary.fails} fails, ${summary.warnings} warnings. Report: seo-report.json`,
 );
-process.exit(summary.errors ? 1 : 0);
+process.exit(summary.fails ? 1 : 0);

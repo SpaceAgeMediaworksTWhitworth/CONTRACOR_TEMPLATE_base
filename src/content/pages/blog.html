@@ -1,6 +1,6 @@
 ---
 eleventyComputed:
-  title: "{{ industry.label }} Tips & News | {{ client.name }}"
+  title: "{{ industry.label }} Tips & News | {{ client.shortName or client.name }}"
   description: "Tips from {{ client.name }} on caring for your home in the {{ client.region }}: what to watch for, what things cost, and when to call a pro."
 permalink: "/blog/"
 ---
@@ -8,40 +8,15 @@ permalink: "/blog/"
 {% extends "layouts/base.html" %}
 
 {% block head %}
-    <link rel="preload" as="image" href="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | avif %}" />
     <link rel="stylesheet" href="/assets/css/blog.css">
+    <link rel="stylesheet" href="/assets/css/inner.css">
 {% endblock %}
 
 {% block body %}
-    <!-- ============================================ -->
-    <!--                   Banner                     -->
-    <!-- ============================================ -->
-
-    <div id="banner-310">
-        <div class="cs-container">
-            <span class="cs-int-title">Blog</span>
-            <div class="cs-breadcrumbs">
-                <a href="/" class="cs-link">Home</a>
-                <a href="/blog/" class="cs-link cs-active">Blog</a>
-            </div>
-        </div>
-        <!--Background Image-->
-        <picture class="cs-background">
-            <!--Mobile Image-->
-            <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | avif %}" type="image/avif">
-            <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | webp %}" type="image/webp">
-            <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | jpeg %}" type="image/jpeg">
-            <!--Tablet Image-->
-            <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 942 }) | avif %}" type="image/avif">
-            <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 942 }) | webp %}" type="image/webp">
-            <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 942 }) | jpeg %}" type="image/jpeg">
-            <!--Desktop Image-->
-            <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | avif %}" type="image/avif">
-            <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | webp %}" type="image/webp">
-            <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | jpeg %}" type="image/jpeg">
-            <img src="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | jpeg %}" alt="library" width="1920" height="482" loading="eager" decoding="async">
-        </picture>
-    </div>
+    {% set bannerTitle = industry.label + " Tips and Guides" %}
+    {% set bannerText = "Straight answers from " + client.name + " on caring for your home in the " + client.region + "." %}
+    {% set crumbs = [{ url: "/blog/", label: "Blog" }] %}
+    {% include "components/banner.html" %}
 
     <!-- ============================================ -->
     <!--                 Blog Listings                -->
@@ -50,9 +25,9 @@ permalink: "/blog/"
     <div id="blog-listing">
         <div class="cs-container">
             {% if collections.post | length == 0 %}
-                <h1 class="cs-title">
-                    No Recent Posts
-                </h1>
+                <h2 class="cs-title">
+                    New posts coming soon
+                </h2>
             {% else %}
                 {%- for post in collections.post | reverse -%}
                     <article class="cs-article">

@@ -17,6 +17,7 @@ featuredServices: [roof-inspections, roof-replacement, roof-repair]
 faqs:
   - { q: "My St. Peters home is on its second roof. How do I know when it needs a third?", a: "Look for curled or cracked shingles, bare spots, and granules in the gutters. Or call us for a free inspection and we will tell you straight." }
   - { q: "Can you just repair my roof instead of replacing it?", a: "Often, yes. If the damage is in one spot and the rest of the roof is sound, a repair makes sense. We will tell you which one fits." }
+gbpListed: true
 verified: false
 ---
 

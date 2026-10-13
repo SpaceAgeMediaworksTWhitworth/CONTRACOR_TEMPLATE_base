@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, siding, gutters]
 faqs:
   - { q: "Should I replace my roof and siding at the same time?", a: "It can make sense. You deal with one crew and one project, and the colors are picked to go together. But if only one needs work, we will tell you that." }
   - { q: "My Manchester ranch has a low slope roof on the back addition. Can you fix that?", a: "Yes. Low slope sections need a different kind of roofing than regular shingles. We check it and use the right material for the slope." }
+gbpListed: true
 verified: false
 ---
 

@@ -3,7 +3,7 @@ permalink: "/"
 tags: "sitemap" # index.html is not in content/, so it needs the sitemap tag here
 pageType: "home"
 eleventyComputed:
-  title: "{{ industry.titleNoun or industry.label }} in {{ client.address.city }}, {{ client.address.state }} | {{ client.name }}"
+  title: "{{ industry.titleNoun or industry.label }} in {{ client.address.city }}, {{ client.address.state }} | {{ client.shortName or client.name }}"
   description: "{{ client.name }} is a local {{ industry.label | lower }} company in {{ client.address.city }}, {{ client.address.state }}. {{ industry.home.metaText }} Call {{ client.phoneFormatted }}."
 ---
 {% import "components/macros.html" as ui %}
@@ -28,9 +28,10 @@ eleventyComputed:
     <!-- ============================================ -->
     <section id="hero-143">
         <div class="cs-container">
-            <span class="cs-topper">{{ industry.home.topper or (client.address.city + ", " + client.address.state) }}</span>
-            <h1 class="cs-title">{{ industry.home.headline }}</h1>
-            <p class="cs-text">{{ industry.home.text }}</p>
+            <span class="cs-topper">{{ client.name }}</span>
+            {# H1 owns "<trade> in <home city>". The home page is the home-city page (no town page for it). #}
+            <h1 class="cs-title">{{ industry.titleNoun or industry.label }} in {{ client.address.city }}, {{ client.address.state }}</h1>
+            <p class="cs-text"><strong>{{ industry.home.headline }}</strong> {{ industry.home.text }}</p>
             <div class="cs-button-group">
                 <a href="/contact/" class="cs-button-solid">{{ industry.home.ctaLabel or "Get a Free Estimate" }}</a>
                 <a href="tel:{{ client.phoneForTel }}" class="cs-button-outline cs-button-light" data-loc="hero">Call {{ client.phoneFormatted }}</a>

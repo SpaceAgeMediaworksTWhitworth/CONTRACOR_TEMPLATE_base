@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, roof-insurance-claims, roof-inspections]
 faqs:
   - { q: "Will my Dardenne Prairie HOA let me pick any shingle color?", a: "Many HOAs have a list of approved colors or styles. Check your rules. We help you pick a shingle that fits, and we send you the details to submit." }
   - { q: "My neighbors are all getting new roofs after a storm. Should I?", a: "Maybe. It depends on what the storm did to your roof. Get an inspection first. If there is real damage, we can help with your claim. If not, we will tell you." }
+gbpListed: true
 verified: false
 ---
 

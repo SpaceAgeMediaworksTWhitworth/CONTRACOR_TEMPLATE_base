@@ -1,7 +1,7 @@
 ---
 permalink: "/privacy-policy/"
 eleventyComputed:
-  title: "Privacy Policy | {{ client.name }}"
+  title: "Privacy Policy | {{ client.shortName or client.name }}"
   description: "How {{ client.name }} collects, uses, and protects your information."
 ---
 {% extends "layouts/base.html" %}

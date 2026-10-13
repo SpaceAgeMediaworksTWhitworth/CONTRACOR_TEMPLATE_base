@@ -330,6 +330,62 @@
 		}
 	}
 
+	/* ── Blog post extras ───────────────────────────── */
+	.cs-post-callout,
+	.cs-author-box {
+		background: #f6f7f9;
+		border-left: 4px solid var(--primary);
+		padding: 1rem 1.25rem;
+		border-radius: 0 0.5rem 0.5rem 0;
+		margin: 1.5rem 0;
+		line-height: 1.6em;
+		a {
+			color: var(--primary);
+			font-weight: 700;
+		}
+	}
+
+	/* ── Local proof (town pages) ───────────────────── */
+	.cs-local-proof {
+		padding: var(--sectionPadding);
+		> .cs-container {
+			max-width: @container;
+			margin: auto;
+		}
+		.cs-review-group {
+			margin-top: 1.5rem;
+		}
+	}
+	.cs-job-group {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 1.25rem;
+	}
+	.cs-job {
+		border: 1px solid #e5e7eb;
+		border-radius: 0.5rem;
+		overflow: hidden;
+		padding-bottom: 1.25rem;
+		> :not(picture) {
+			margin-left: 1.25rem;
+			margin-right: 1.25rem;
+		}
+		picture img {
+			width: 100%;
+			height: auto;
+			display: block;
+			margin-bottom: 1rem;
+		}
+		h3 {
+			margin-top: 1.25rem;
+		}
+		p {
+			line-height: 1.5em;
+		}
+	}
+
 	/* ── Steps ─────────────────────────────────────── */
 	.cs-step-group {
 		list-style: none;
@@ -605,6 +661,7 @@
 }
 
 @media only screen and (min-width: 48rem) {
+	.cs-job-group,
 	.cs-card-group,
 	.cs-review-group,
 	.cs-area-cards {

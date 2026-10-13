@@ -9,8 +9,13 @@ module.exports = {
 	// Which pack in /industries to use (roofing, plumbing, electrical, ...)
 	industry: "roofing",
 
+	// true = demo/sample site. Audit downgrades "needs real proof" failures to warnings.
+	demo: true,
+
 	// Public-facing business name used throughout templates.
 	name: "Ridgeline Roofing & Exteriors",
+	// Short brand for page titles (keeps titles under 60 characters).
+	shortName: "Ridgeline Roofing",
 	legalName: "Ridgeline Roofing & Exteriors LLC",
 	tagline: "Roofing, gutters and siding for St. Charles and West County homes.",
 	yearFounded: "2012",
@@ -53,14 +58,24 @@ module.exports = {
 	],
 	emergencyService: true, // shows "24/7 emergency" copy + badge
 
-	// Real review numbers from Google. Used on the site and schema. Leave count 0 to hide.
+	// Real review numbers from Google. Shown on the site (not in schema: Google
+	// ignores self-hosted ratings for local businesses). Leave count 0 to hide.
 	reviews: {
 		rating: 4.9,
 		count: 0,
 		googleReviewsUrl: "",
-		// A few real reviews to feature. { name, town, text, stars }
+		// A few real reviews to feature. { name, town, text, stars, source }
+		// "town" must match a town page's town to show up there as local proof.
 		featured: [],
 	},
+
+	// The home city has no town page: the home page owns "<trade> in <home city>".
+	// Set true only if the shop is in a suburb and the home page targets the metro.
+	homeCityException: false,
+
+	// Old site URLs -> new pages, written to Netlify's _redirects as 301s.
+	// { from: "/old-roof-page.html", to: "/services/roof-repair/" }
+	redirects: [],
 
 	// Services shown on the site. Must match file names in src/content/services/.
 	// Leave [] to use every service in the pack.
@@ -74,6 +89,8 @@ module.exports = {
 	},
 
 	google: {
+		// The GBP "website" link should be the home page with UTM tags:
+		// https://www.example.com/?utm_source=gbp&utm_medium=organic
 		businessProfileUrl: "",
 		reviewLinkUrl: "",
 		// Google Maps embed URL for the contact page (Share > Embed a map > src)

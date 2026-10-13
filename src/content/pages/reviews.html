@@ -1,7 +1,7 @@
 ---
 permalink: "/reviews/"
 eleventyComputed:
-  title: "Reviews | {{ client.name }}"
+  title: "Reviews | {{ client.shortName or client.name }}"
   description: "Read what homeowners in {{ client.address.city }} and the {{ client.region }} say about {{ client.name }}.{% if client.reviews.count > 0 %} {{ client.reviews.rating }} stars from {{ client.reviews.count }} Google reviews.{% endif %}"
 ---
 {% extends "layouts/base.html" %}

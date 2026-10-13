@@ -17,6 +17,7 @@ featuredServices: [emergency-roof-repair, roof-replacement, storm-damage-roof-re
 faqs:
   - { q: "A storm blew shingles off my Eureka roof. What should I do first?", a: "Call us. If water can get in, we can put a tarp on to protect your home. Then we inspect the roof and help with the insurance claim if there is storm damage." }
   - { q: "Do you work on newer homes in Eureka subdivisions?", a: "Yes. Newer roofs can still take wind and hail damage. We inspect, repair and replace roofs on homes of every age." }
+gbpListed: true
 verified: false
 ---
 

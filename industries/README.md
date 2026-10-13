@@ -16,6 +16,7 @@ Pack files can use these. Scaffold replaces them from `src/_data/client.js`.
   "industry": "roofing",
   "label": "Roofing",
   "titleNoun": "Roofing Contractor",          // used in titles: "<titleNoun> in <Town>, <ST>"
+  "tradeTerms": ["roofing contractor", "roofer", "roofing company"], // head terms only the home page may pair with the home city
   "schemaType": "RoofingContractor",        // schema.org LocalBusiness subtype
   "gbpPrimaryCategory": "Roofing contractor",
   "home": { "topper": "", "headline": "", "text": "", "ctaLabel": "", "metaText": "one line for the home meta description", "image": "/assets/images/hero.jpg" },

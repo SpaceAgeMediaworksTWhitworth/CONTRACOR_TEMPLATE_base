@@ -17,6 +17,7 @@ featuredServices: [roof-inspections, roof-repair, storm-damage-roof-repair]
 faqs:
   - { q: "How often should I have my roof checked in Ellisville?", a: "Once a year is a good rule, and after any big hail or wind storm. Catching small problems early costs a lot less than fixing a leak later." }
   - { q: "What are the first signs my roof needs work?", a: "Missing or curled shingles, granules in the gutters, stains on the ceiling, or light showing in the attic. If you see any of these, call us for a free look." }
+gbpListed: true
 verified: false
 ---
 

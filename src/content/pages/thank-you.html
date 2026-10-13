@@ -3,7 +3,7 @@ permalink: "/thank-you/"
 noindex: true
 eleventyExcludeFromCollections: true
 eleventyComputed:
-  title: "Thank You | {{ client.name }}"
+  title: "Thank You | {{ client.shortName or client.name }}"
   description: "Thanks for reaching out to {{ client.name }}."
 ---
 {% extends "layouts/base.html" %}

@@ -111,15 +111,8 @@ module.exports = function schema(data) {
 			client.google && client.google.businessProfileUrl,
 			...(client.credentials || []).map((c) => c.url),
 		].filter(Boolean),
-		aggregateRating:
-			client.reviews && client.reviews.count > 0
-				? {
-						"@type": "AggregateRating",
-						ratingValue: client.reviews.rating,
-						reviewCount: client.reviews.count,
-						bestRating: 5,
-					}
-				: undefined,
+		// No aggregateRating here: Google ignores self-hosted reviews for local businesses.
+		// Reviews are shown as plain HTML instead.
 	};
 
 	const website = {

@@ -17,6 +17,7 @@ featuredServices: [roof-repair, gutters, emergency-roof-repair]
 faqs:
   - { q: "A tree limb fell on my roof in Weldon Spring. What should I do?", a: "Stay safe and stay out of rooms where the ceiling looks damaged. Call us. We can tarp the roof to keep water out, then fix it once the limb is removed." }
   - { q: "Is moss on my roof a problem?", a: "It can be. Moss holds water against the shingles and wears them out faster. We can check how bad it is and tell you the best fix." }
+gbpListed: true
 verified: false
 ---
 

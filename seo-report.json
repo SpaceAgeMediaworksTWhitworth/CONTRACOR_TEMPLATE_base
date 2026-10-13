@@ -1,59 +1,290 @@
 {
   "summary": {
-    "date": "2026-09-28T19:20:01.376Z",
+    "date": "2026-10-13T15:40:49.772Z",
     "site": "Ridgeline Roofing & Exteriors",
-    "domain": "https://www.example.com",
-    "pages": 41,
-    "indexable": 39,
-    "byType": {
-      "page": 11,
-      "area": 20,
+    "pages": 40,
+    "indexable": 38,
+    "byIntent": {
+      "nav": 8,
+      "home": 1,
+      "town": 19,
       "service": 10
     },
-    "errors": 0,
-    "warnings": 3,
-    "info": 5
+    "fails": 0,
+    "warnings": 21
+  },
+  "targets": {
+    "/": {
+      "intent": "home",
+      "keyword": "roofing contractor O'Fallon"
+    },
+    "/services/emergency-roof-repair/": {
+      "intent": "service",
+      "keyword": "Emergency Roof Repair & Tarping"
+    },
+    "/services/flat-commercial-roofing/": {
+      "intent": "service",
+      "keyword": "Flat & Commercial Roofing"
+    },
+    "/services/gutters/": {
+      "intent": "service",
+      "keyword": "Gutter Installation & Repair"
+    },
+    "/services/metal-roofing/": {
+      "intent": "service",
+      "keyword": "Metal Roofing"
+    },
+    "/services/roof-inspections/": {
+      "intent": "service",
+      "keyword": "Roof Inspections"
+    },
+    "/services/roof-insurance-claims/": {
+      "intent": "service",
+      "keyword": "Insurance Claim Help"
+    },
+    "/services/roof-repair/": {
+      "intent": "service",
+      "keyword": "Roof Repair"
+    },
+    "/services/roof-replacement/": {
+      "intent": "service",
+      "keyword": "Roof Replacement"
+    },
+    "/services/siding/": {
+      "intent": "service",
+      "keyword": "Siding Installation & Repair"
+    },
+    "/services/storm-damage-roof-repair/": {
+      "intent": "service",
+      "keyword": "Storm & Hail Damage Repair"
+    },
+    "/service-areas/ballwin-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Ballwin"
+    },
+    "/service-areas/chesterfield-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Chesterfield"
+    },
+    "/service-areas/cottleville-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Cottleville"
+    },
+    "/service-areas/creve-coeur-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Creve Coeur"
+    },
+    "/service-areas/dardenne-prairie-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Dardenne Prairie"
+    },
+    "/service-areas/ellisville-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Ellisville"
+    },
+    "/service-areas/eureka-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Eureka"
+    },
+    "/service-areas/florissant-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Florissant"
+    },
+    "/service-areas/kirkwood-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Kirkwood"
+    },
+    "/service-areas/lake-saint-louis-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Lake Saint Louis"
+    },
+    "/service-areas/manchester-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Manchester"
+    },
+    "/service-areas/maryland-heights-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Maryland Heights"
+    },
+    "/service-areas/st-charles-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor St. Charles"
+    },
+    "/service-areas/st-peters-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor St. Peters"
+    },
+    "/service-areas/town-and-country-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Town and Country"
+    },
+    "/service-areas/webster-groves-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Webster Groves"
+    },
+    "/service-areas/weldon-spring-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Weldon Spring"
+    },
+    "/service-areas/wentzville-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Wentzville"
+    },
+    "/service-areas/wildwood-mo/": {
+      "intent": "town",
+      "keyword": "roofing contractor Wildwood"
+    }
   },
   "issues": [
     {
       "level": "warn",
+      "rule": "B28",
       "url": "/404.html",
-      "msg": "Description is short (28 chars)"
+      "msg": "Description is 28 chars (aim for 70-155)"
     },
     {
       "level": "warn",
-      "url": "/",
-      "msg": "Title is 66 chars (aim for 65 or less): \"Roofing Contractor in O'Fallon, MO | Ridgeline Roofing & Exteriors\""
-    },
-    {
-      "level": "warn",
+      "rule": "B28",
       "url": "/thank-you/",
-      "msg": "Description is short (57 chars)"
+      "msg": "Description is 57 chars (aim for 70-155)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/ballwin-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Ballwin, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/chesterfield-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Chesterfield, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/cottleville-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Cottleville, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/creve-coeur-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Creve Coeur, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/dardenne-prairie-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Dardenne Prairie, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/ellisville-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Ellisville, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/eureka-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Eureka, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/florissant-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Florissant, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/kirkwood-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Kirkwood, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/lake-saint-louis-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Lake Saint Louis, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/manchester-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Manchester, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/maryland-heights-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Maryland Heights, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/st-charles-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming St. Charles, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/st-peters-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming St. Peters, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/town-and-country-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Town and Country, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/webster-groves-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Webster Groves, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/weldon-spring-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Weldon Spring, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/wentzville-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Wentzville, a sourced local fact, named neighborhoods)"
+    },
+    {
+      "level": "warn",
+      "rule": "B34",
+      "url": "/service-areas/wildwood-mo/",
+      "msg": "Only 1 piece(s) of real local proof (need 2+: a job here, a review naming Wildwood, a sourced local fact, named neighborhoods)"
     },
     {
       "level": "info",
+      "rule": "-",
+      "url": "(site)",
+      "msg": "client.demo is true: missing local proof is a warning, not a failure."
+    },
+    {
+      "level": "info",
+      "rule": "-",
       "url": "(site)",
       "msg": "client.indexable is false: every page is noindex. Flip it at launch."
     },
     {
       "level": "info",
+      "rule": "-",
       "url": "(site)",
       "msg": "No GTM or GA4 ID in client.js"
     },
     {
       "level": "info",
+      "rule": "-",
       "url": "(site)",
-      "msg": "No Search Console verification tag (fine if verified by DNS)"
-    },
-    {
-      "level": "info",
-      "url": "(site)",
-      "msg": "No review count in client.js. Add real Google numbers for trust + schema."
-    },
-    {
-      "level": "info",
-      "url": "(site)",
-      "msg": "No Google Business Profile URL. Add it (it's linked in schema sameAs)."
+      "msg": "No Google Business Profile URL in client.js"
     }
   ]
 }

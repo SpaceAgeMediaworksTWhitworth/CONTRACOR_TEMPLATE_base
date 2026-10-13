@@ -1,7 +1,7 @@
 ---
 permalink: "/service-areas/"
 eleventyComputed:
-  title: "Service Areas | {{ client.name }}"
+  title: "Service Areas | {{ client.shortName or client.name }}"
   description: "{{ client.name }} serves {{ collections.areas.length }} towns in the {{ client.region }}, including {% for a in collections.areas.slice(0, 4) %}{{ a.data.town }}{% if not loop.last %}, {% endif %}{% endfor %}. Free estimates."
 ---
 {% extends "layouts/base.html" %}

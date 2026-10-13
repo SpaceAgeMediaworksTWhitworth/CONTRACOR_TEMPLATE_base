@@ -8,6 +8,7 @@ module.exports = {
 	layout: "layouts/post.html",
 	tags: "post",
 	pageType: "post",
+	intent: "informational",
 	eleventyComputed: {
 		preloadImg: (data) => data.image,
 		permalink: (data) => (isHidden(data) ? false : `/blog/${data.url || data.page.fileSlug}/`),

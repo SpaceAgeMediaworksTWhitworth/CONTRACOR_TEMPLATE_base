@@ -1,0 +1,8 @@
+---
+permalink: /_redirects
+eleventyExcludeFromCollections: true
+layout: null
+---
+# Generated from src/_data/redirects.js. Edit client.redirects in client.js, not this file.
+{% for r in redirects %}{{ r.from }}  {{ r.to }}  {{ r.status or 301 }}
+{% endfor %}

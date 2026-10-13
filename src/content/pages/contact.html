@@ -1,7 +1,7 @@
 ---
 permalink: "/contact/"
 eleventyComputed:
-  title: "Contact Us | Free Estimates | {{ client.name }}"
+  title: "Contact Us | Free Estimates | {{ client.shortName or client.name }}"
   description: "Get a free {{ industry.label | lower }} estimate from {{ client.name }}. Call {{ client.phoneFormatted }} or send a message. Serving {{ client.address.city }} and the {{ client.region }}."
 ---
 {% extends "layouts/base.html" %}

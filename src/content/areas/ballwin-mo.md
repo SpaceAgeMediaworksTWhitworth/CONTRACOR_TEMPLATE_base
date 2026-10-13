@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, roof-repair, gutters]
 faqs:
   - { q: "My Ballwin home is from the 1970s. What should I expect when I replace the roof?", a: "We tear off all old layers and check the wood deck. On older homes we often find a few boards to replace. We also check attic vents. We tell you the cost of any extras before we do them." }
   - { q: "Why is my attic so hot, and does it hurt my roof?", a: "Poor attic airflow is common in older homes. Heat and moisture trapped in the attic can wear out shingles faster. We check your vents and suggest fixes if needed." }
+gbpListed: true
 verified: false
 ---
 

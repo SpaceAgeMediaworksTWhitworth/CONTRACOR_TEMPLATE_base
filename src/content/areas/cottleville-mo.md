@@ -17,6 +17,7 @@ featuredServices: [roof-repair, roof-replacement, gutters]
 faqs:
   - { q: "I have a small leak in my Cottleville home. Do I need a whole new roof?", a: "Not always. Most leaks come from one spot, like a cracked pipe boot or loose flashing. We find the source and fix it if the rest of the roof is in good shape." }
   - { q: "Can you replace my gutters when you do my roof?", a: "Yes. It is often a good time to do both. We can quote them together or on their own." }
+gbpListed: true
 verified: false
 ---
 

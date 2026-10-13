@@ -1,4 +1,5 @@
 {% extends "layouts/base.html" %}
+{% import "components/macros.html" as ui %}
 {#- Service area (town) page. Content comes from src/content/areas/<town>-<st>.md -#}
 
 {% block head %}
@@ -28,6 +29,13 @@
                     {% if permits %}<div class="cs-local-card"><h3>Permits</h3>{{ permits | md | safe }}</div>{% endif %}
                 </div>
                 {% endif %}
+
+                {% if localFacts and localFacts.length %}
+                <h2>Good to Know in {{ town }}</h2>
+                <ul class="cs-checklist">
+                    {% for f in localFacts %}<li>{{ f.text | mdInline | safe }}{% if f.source and f.source.startsWith("http") %} <a href="{{ f.source }}" target="_blank" rel="noopener nofollow">(source)</a>{% endif %}</li>{% endfor %}
+                </ul>
+                {% endif %}
             </article>
             <aside class="cs-sidebar">
                 <div class="cs-side-card cs-side-cta">
@@ -49,11 +57,45 @@
         </div>
     </section>
 
+    {# ── Local proof: real jobs + reviews from this town. Each one counts toward the 2-proof minimum. ── #}
+    {% set townReviews = client.reviews.featured | selectattr("town", "equalto", town) %}
+    {% if (jobs and jobs.length) or townReviews.length %}
+    <section class="cs-local-proof">
+        <div class="cs-container">
+            <div class="cs-content">
+                <span class="cs-topper">Local Work</span>
+                <h2 class="cs-title">Recent Jobs in {{ town }}</h2>
+            </div>
+            {% if jobs and jobs.length %}
+            <ul class="cs-job-group">
+                {% for job in jobs %}
+                <li class="cs-job">
+                    {% if job.image | imageOr(false) %}
+                    {{ ui.picture(job.image, job.alt or (job.title + " in " + town), [{ media: "(min-width: 0px)", w: 640, h: 420 }]) }}
+                    {% endif %}
+                    <h3 class="cs-h3">{{ job.title }}</h3>
+                    <p>{{ job.text }}</p>
+                    {% if job.service %}{% set js = collections.services | bySlugs([job.service]) %}{% if js.length %}<a class="cs-more" href="{{ js[0].url }}">About our {{ js[0].data.name | lower }} work</a>{% endif %}{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if townReviews.length %}
+            <ul class="cs-review-group">
+                {% for r in townReviews %}
+                <li class="cs-review">{{ ui.stars(r.stars or 5) }}<blockquote class="cs-review-text">{{ r.text }}</blockquote><span class="cs-review-name">{{ r.name }}, {{ town }}</span></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+
     {% set cardServices = collections.services | offered(client.services) | bySlugs(featuredServices or []) %}
     {% if not cardServices.length %}{% set cardServices = (collections.services | offered(client.services)).slice(0, 3) %}{% endif %}
     {% set cardsTopper = "Popular in " + town %}
     {% set cardsTitle = "What " + town + " Homeowners Call Us For" %}
-    {% set cardsTown = town %}
+    {% set cardsTown = "" %}
     {% include "components/service-cards.html" %}
 
     <section class="cs-all-services">

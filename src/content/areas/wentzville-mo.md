@@ -18,6 +18,7 @@ faqs:
   - { q: "My Wentzville house is only a few years old. Can the roof really be damaged?", a: "Yes. Hail and wind do not care how old a roof is. A new roof can lose shingles or take hail hits. A quick inspection will tell you." }
   - { q: "Is my roof still under the builder's warranty?", a: "It might be. Check your closing papers. If it is, call the builder first. If not, or if it is storm damage, we can help." }
   - { q: "Do you work with Wentzville HOAs?", a: "Yes. We give you the shingle color and style details to send to your HOA, and we wait for approval before we start." }
+gbpListed: true
 verified: false
 ---
 

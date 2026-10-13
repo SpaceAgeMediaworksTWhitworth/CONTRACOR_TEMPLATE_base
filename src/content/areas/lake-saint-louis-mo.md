@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, storm-damage-roof-repair, metal-roofing]
 faqs:
   - { q: "Do I need approval before I replace my roof in Lake Saint Louis?", a: "Many homes here are part of a community association that reviews exterior changes. Check your rules. We give you the product and color details to send in, and we wait for the OK." }
   - { q: "Does living on the lake change how my roof should be built?", a: "It can. Open water means more wind. We make sure shingles are nailed right and edges are sealed well so they hold up in strong gusts." }
+gbpListed: true
 verified: false
 ---
 

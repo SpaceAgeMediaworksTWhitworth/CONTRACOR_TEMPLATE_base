@@ -1,7 +1,7 @@
 ---
 permalink: "/about/"
 eleventyComputed:
-  title: "About Us | {{ client.name }}"
+  title: "About Us | {{ client.shortName or client.name }}"
   description: "Meet {{ client.name }}, a local {{ industry.label | lower }} company in {{ client.address.city }}, {{ client.address.state }}.{% if client.yearFounded %} Serving the {{ client.region }} since {{ client.yearFounded }}.{% endif %}"
 ---
 {% extends "layouts/base.html" %}

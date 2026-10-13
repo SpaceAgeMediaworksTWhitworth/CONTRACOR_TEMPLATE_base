@@ -2,6 +2,14 @@
   "industry": "roofing",
   "label": "Roofing",
   "titleNoun": "Roofing Contractor",
+  "tradeTerms": [
+    "roofing contractor",
+    "roofing contractors",
+    "roofer",
+    "roofers",
+    "roofing company",
+    "roofing companies"
+  ],
   "schemaType": "RoofingContractor",
   "gbpPrimaryCategory": "Roofing contractor",
   "home": {

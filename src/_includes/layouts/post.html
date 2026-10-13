@@ -15,18 +15,18 @@
         <!--Background Image-->
         <picture class="cs-background">
             <!--Mobile Image-->
-            <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | avif %}" type="image/avif">
-            <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | webp %}" type="image/webp">
-            <source media="(max-width: 600px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 640, height: 600 }) | jpeg %}" type="image/jpeg">
+            <source media="(max-width: 600px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 640, height: 600 }) | avif %}" type="image/avif">
+            <source media="(max-width: 600px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 640, height: 600 }) | webp %}" type="image/webp">
+            <source media="(max-width: 600px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 640, height: 600 }) | jpeg %}" type="image/jpeg">
             <!--Tablet Image-->
-            <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 942 }) | avif %}" type="image/avif">
-            <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 942 }) | webp %}" type="image/webp">
-            <source media="(max-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2048, height: 942 }) | jpeg %}" type="image/jpeg">
+            <source media="(max-width: 1024px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 2048, height: 942 }) | avif %}" type="image/avif">
+            <source media="(max-width: 1024px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 2048, height: 942 }) | webp %}" type="image/webp">
+            <source media="(max-width: 1024px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 2048, height: 942 }) | jpeg %}" type="image/jpeg">
             <!--Desktop Image-->
-            <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | avif %}" type="image/avif">
-            <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | webp %}" type="image/webp">
-            <source media="(min-width: 1024px)" srcset="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | jpeg %}" type="image/jpeg">
-            <img src="{% getUrl "/assets/images/cabinets.jpg" | resize({ width: 2500, height: 628 }) | jpeg %}" alt="library" width="1920" height="482" decoding="async">
+            <source media="(min-width: 1024px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 2500, height: 628 }) | avif %}" type="image/avif">
+            <source media="(min-width: 1024px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 2500, height: 628 }) | webp %}" type="image/webp">
+            <source media="(min-width: 1024px)" srcset="{% getUrl client.brand.ogImage | resize({ width: 2500, height: 628 }) | jpeg %}" type="image/jpeg">
+            <img src="{% getUrl client.brand.ogImage | resize({ width: 2500, height: 628 }) | jpeg %}" alt="library" width="1920" height="482" decoding="async">
         </picture>
     </div>
 
@@ -63,17 +63,28 @@
                         <span class="cs-date">{{ date | postDate }}</span>
                     </div>
                 </div>
+                {# Every post links up to exactly one primary service page, near the top and at the end. #}
+                {% set primaryService = (collections.services | bySlugs([service or (services and services[0])]))[0] %}
+                {% if primaryService %}
+                <p class="cs-post-callout">Need help now? See our <a href="{{ primaryService.url }}">{{ primaryService.data.name | lower }} service</a> or call <a href="tel:{{ client.phoneForTel }}" data-loc="post-top">{{ client.phoneFormatted }}</a>.</p>
+                {% endif %}
                 <section class="cs-article-content">
                     {{ content | safe }}
                 </section>
+                <aside class="cs-author-box">
+                    <strong>About the author:</strong> {{ author or client.ownerName or client.name }}{% if client.ownerName and (author == client.ownerName or not author) %} owns {{ client.name }}{% if client.yearFounded %}, serving the {{ client.region }} since {{ client.yearFounded }}{% endif %}.{% endif %}
+                    {% if client.ownerBio %}{{ client.ownerBio }}{% endif %}
+                    {% if client.licenses.length %} Licensed: {{ client.licenses | join(", ") }}.{% endif %}
+                </aside>
             </article>
         </div>
 
         {% include 'components/featured-posts.html' %}
     </div>
 
-    {% if services and services.length %}
-        {% set cardServices = collections.services | bySlugs(services) %}
+    {% set relatedSlugs = [service] if service else services %}
+    {% if relatedSlugs and relatedSlugs.length %}
+        {% set cardServices = collections.services | bySlugs(relatedSlugs) %}
         {% set cardsTopper = "Need a Hand?" %}
         {% set cardsTitle = "How " + client.name + " Can Help" %}
         {% set cardsTown = "" %}

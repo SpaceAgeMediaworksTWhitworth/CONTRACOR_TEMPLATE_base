@@ -17,6 +17,7 @@ featuredServices: [roof-replacement, flat-commercial-roofing, roof-inspections]
 faqs:
   - { q: "My Chesterfield home has a complex roof with lots of angles. Does that change the price?", a: "Yes. More valleys, dormers and steep slopes take more time, more material and more safety gear. We walk the whole roof and give you a written price that covers it all." }
   - { q: "Do you work on commercial roofs in Chesterfield Valley?", a: "Yes. We inspect and repair flat and low slope commercial roofs. We will tell you if a repair or a new roof makes more sense." }
+gbpListed: true
 verified: false
 ---
 
