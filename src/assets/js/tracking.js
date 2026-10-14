@@ -3,8 +3,9 @@
 // and mark them as key events (conversions) in GA4.
 (() => {
 	window.dataLayer = window.dataLayer || [];
+	// Reset per-event fields so one event's details don't stick to the next (GTM merges dataLayer pushes)
 	const push = (event, extra = {}) =>
-		window.dataLayer.push({ event, page_path: location.pathname, ...extra });
+		window.dataLayer.push({ event, page_path: location.pathname, form_name: undefined, link_location: undefined, ...extra });
 
 	document.addEventListener("click", (e) => {
 		const link = e.target.closest("a[href]");
