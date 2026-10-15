@@ -4,8 +4,12 @@
 (() => {
 	window.dataLayer = window.dataLayer || [];
 	// Reset per-event fields so one event's details don't stick to the next (GTM merges dataLayer pushes)
-	const push = (event, extra = {}) =>
+	const push = (event, extra = {}) => {
 		window.dataLayer.push({ event, page_path: location.pathname, form_name: undefined, link_location: undefined, ...extra });
+		// Sites with GA4 hard-coded (no GA4 event tags in GTM) set window.gtagLeadEvents = true to send these straight to GA4.
+		// Never set it on a site whose GTM also sends them, or each lead counts twice.
+		if (window.gtagLeadEvents && typeof window.gtag === "function") window.gtag("event", event, extra);
+	};
 
 	document.addEventListener("click", (e) => {
 		const link = e.target.closest("a[href]");
