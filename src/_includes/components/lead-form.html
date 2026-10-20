@@ -33,7 +33,10 @@
         </label>
         <label class="cs-label">Details<textarea class="cs-input cs-textarea" name="message" rows="4"></textarea></label>
         {% if client.sms.enabled %}
-        <label class="cs-consent"><input type="checkbox" name="sms_consent" value="yes"> I agree to get text messages from {{ client.name }} about my request. Message and data rates may apply. Reply STOP to opt out. See our <a href="/sms-terms/">SMS Terms</a> and <a href="/privacy-policy/">Privacy Policy</a>.</label>
+        {# A2P: two separate, unchecked, optional boxes (non-marketing + marketing). Wording proven on approved campaigns. Don't reword. #}
+        <label class="cs-consent"><input type="checkbox" name="sms_consent_non_marketing" value="yes"> By checking this box, I consent to receive non-marketing text messages from {{ client.legalName or client.name }} about my request, appointments and account. Message frequency varies. Message and data rates may apply. Reply STOP to opt out at any time. Reply HELP for help. Consent is not a condition of purchase.</label>
+        <label class="cs-consent"><input type="checkbox" name="sms_consent_marketing" value="yes"> By checking this box, I consent to receive marketing and promotional text messages from {{ client.legalName or client.name }}, including special offers and review requests. Message frequency varies. Message and data rates may apply. Reply STOP to opt out at any time. Reply HELP for help. Consent is not a condition of purchase.</label>
+        <p class="cs-consent-links"><a href="/privacy-policy/">Privacy Policy</a> | <a href="/sms-terms/">SMS Terms &amp; Conditions</a></p>
         {% endif %}
         <button class="cs-button-solid cs-submit" type="submit">Get My Free Estimate</button>
     </form>

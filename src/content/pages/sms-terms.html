@@ -13,7 +13,7 @@ eleventyComputed:
             <h1>SMS Terms &amp; Conditions</h1>
             <p><em>Last updated: {{ legalUpdated or "September 28, 2026" }}</em></p>
             <h2>Program description</h2>
-            <p>{{ client.name }} will send text messages including, but not limited to, appointment reminders, business communications, special offers, limited-time discounts, and review requests.</p>
+            <p>{{ client.legalName or client.name }}{% if client.legalName and client.legalName != client.name %} ({{ client.name }}){% endif %} will send text messages including, but not limited to, appointment reminders, business communications, special offers, limited-time discounts, and review requests.</p>
             <h2>Frequency</h2>
             <p>You will periodically receive messages from {{ client.name }} when using our website, software, or when you call and we are unable to answer. You may also receive promotional offers or other business communications from {{ client.name }}. Message frequency varies.</p>
             <h2>Opt-out</h2>
@@ -25,7 +25,7 @@ eleventyComputed:
             <h2>Cost</h2>
             <p>Message and data rates may apply for any messages sent to you from us and to us from you. If you have questions about your text or data plan, contact your wireless provider.</p>
             <h2>Privacy</h2>
-            <p>We do not sell or share your mobile number or SMS consent with third parties for marketing. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+            <p>No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. Text messaging originator opt-in data and consent will not be shared with any third parties. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
         </article>
     </div>
 </section>
